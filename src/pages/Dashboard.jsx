@@ -76,7 +76,7 @@ export default function Dashboard() {
         <div className="space-y-3">
           {workKids.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Work Kids</h3>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Work</h3>
               <div className="flex gap-3">
                 {workKids.map(kid => (
                   <div key={kid.id} className="flex flex-col items-center gap-1">
@@ -89,7 +89,7 @@ export default function Dashboard() {
           )}
           {homeBoys.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Home Boys</h3>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Home</h3>
               <div className="flex gap-3 flex-wrap">
                 {homeBoys.map(kid => (
                   <div key={kid.id} className="flex flex-col items-center gap-1">

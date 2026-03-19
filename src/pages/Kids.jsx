@@ -55,7 +55,7 @@ export default function Kids() {
           {workKids.length > 0 && (
             <div>
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Work Kids ({workKids.length})
+                Work ({workKids.length})
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {workKids.map(kid => (
@@ -67,7 +67,7 @@ export default function Kids() {
           {homeBoys.length > 0 && (
             <div>
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Home Boys ({homeBoys.length})
+                Home ({homeBoys.length})
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {homeBoys.map(kid => (

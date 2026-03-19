@@ -102,6 +102,19 @@ export default function Dashboard() {
               </div>
             </div>
           )}
+          {nieces.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Nieces</h3>
+              <div className="flex gap-3 flex-wrap">
+                {nieces.map(kid => (
+                  <div key={kid.id} className="flex flex-col items-center gap-1">
+                    <KidAvatar name={kid.name} color={kid.avatar_color} size="md" />
+                    <span className="text-xs font-medium text-foreground">{kid.name.split(" ")[0]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -122,15 +135,17 @@ export default function Dashboard() {
           </Card>
         ) : (
           <div className="space-y-2">
-            {entries.map(entry => (
-              <ScheduleCard
-                key={entry.id}
-                entry={entry}
-                kids={kids}
-                onToggleComplete={(id, completed) => toggleMutation.mutate({ id, completed })}
-                onEdit={(e) => { setEditEntry(e); setShowEdit(true); }}
-              />
-            ))}
+            {entries
+              .filter(entry => !entry.kids?.length || entry.kids.some(id => presentKidIds.includes(id)))
+              .map(entry => (
+                <ScheduleCard
+                  key={entry.id}
+                  entry={entry}
+                  kids={kids}
+                  onToggleComplete={(id, completed) => toggleMutation.mutate({ id, completed })}
+                  onEdit={(e) => { setEditEntry(e); setShowEdit(true); }}
+                />
+              ))}
           </div>
         )}
       </div>

@@ -54,6 +54,7 @@ export default function AddScheduleDialog({ open, onOpenChange, editEntry }) {
       await base44.entities.ScheduleEntry.create(form);
     }
     queryClient.invalidateQueries({ queryKey: ["scheduleEntries"] });
+    queryClient.invalidateQueries({ queryKey: ["recurringEntries"] });
     setSaving(false);
     onOpenChange(false);
   };
@@ -61,8 +62,13 @@ export default function AddScheduleDialog({ open, onOpenChange, editEntry }) {
   const handleDelete = async () => {
     if (editEntry?.id) {
       setSaving(true);
-      await base44.entities.ScheduleEntry.delete(editEntry.id);
+      try {
+        await base44.entities.ScheduleEntry.delete(editEntry.id);
+      } catch (e) {
+        // entry may already be gone
+      }
       queryClient.invalidateQueries({ queryKey: ["scheduleEntries"] });
+      queryClient.invalidateQueries({ queryKey: ["recurringEntries"] });
       setSaving(false);
       onOpenChange(false);
     }

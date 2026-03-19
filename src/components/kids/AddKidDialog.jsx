@@ -17,28 +17,29 @@ const colors = ["purple", "peach", "teal", "pink", "amber", "sky", "lime"];
 
 const emptyForm = {
   name: "",
-  age: "",
+  birthday: "",
   type: "home_boy",
   avatar_color: "purple",
   notes: "",
 };
 
-export default function AddKidDialog({ open, onOpenChange, editKid }) {
+export default function AddKidDialog({ open, onOpenChange, editKid, defaultType }) {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     if (editKid) {
-      setForm({ ...emptyForm, ...editKid, age: editKid.age?.toString() || "" });
+      setForm({ ...emptyForm, ...editKid, birthday: editKid.birthday || "" });
     } else {
-      setForm(emptyForm);
+      setForm({ ...emptyForm, type: defaultType || "home_boy" });
     }
-  }, [editKid, open]);
+  }, [editKid, open, defaultType]);
 
   const handleSave = async () => {
     setSaving(true);
-    const data = { ...form, age: form.age ? Number(form.age) : undefined };
+    const data = { ...form };
+    if (!data.birthday) delete data.birthday;
     if (editKid?.id) {
       await base44.entities.Kid.update(editKid.id, data);
     } else {
@@ -59,11 +60,15 @@ export default function AddKidDialog({ open, onOpenChange, editKid }) {
     }
   };
 
+  const isAdult = form.type === "adult";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{editKid ? "Edit Kid" : "Add Kid"}</DialogTitle>
+          <DialogTitle>
+            {editKid ? (isAdult ? "Edit Profile" : "Edit Kid") : (isAdult ? "Create Profile" : "Add Kid")}
+          </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
@@ -76,31 +81,32 @@ export default function AddKidDialog({ open, onOpenChange, editKid }) {
             <Input
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="Child's name"
+              placeholder={isAdult ? "Your name" : "Child's name"}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Age</Label>
+              <Label>Birthday</Label>
               <Input
-                type="number"
-                value={form.age}
-                onChange={(e) => setForm({ ...form, age: e.target.value })}
-                placeholder="Optional"
+                type="date"
+                value={form.birthday}
+                onChange={(e) => setForm({ ...form, birthday: e.target.value })}
               />
             </div>
-            <div>
-              <Label>Type</Label>
-              <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="work_kid">Work Kid</SelectItem>
-                  <SelectItem value="home_boy">Home Boy</SelectItem>
-                  <SelectItem value="niece">Niece</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {!isAdult && (
+              <div>
+                <Label>Type</Label>
+                <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="work_kid">Work Kid</SelectItem>
+                    <SelectItem value="home_boy">Home Boy</SelectItem>
+                    <SelectItem value="niece">Niece</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           <div>
@@ -111,7 +117,7 @@ export default function AddKidDialog({ open, onOpenChange, editKid }) {
                   key={c}
                   type="button"
                   onClick={() => setForm({ ...form, avatar_color: c })}
-                  className="p-0.5"
+                  className="p-0.5 select-none"
                 >
                   <KidAvatar
                     name={form.name || "?"}
@@ -129,7 +135,7 @@ export default function AddKidDialog({ open, onOpenChange, editKid }) {
             <Textarea
               value={form.notes}
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
-              placeholder="Allergies, preferences, etc."
+              placeholder={isAdult ? "Any personal notes..." : "Allergies, preferences, etc."}
               rows={2}
             />
           </div>

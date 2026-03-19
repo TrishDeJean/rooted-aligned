@@ -44,7 +44,7 @@ export default function ScheduleCard({ entry, kids, onToggleComplete, onEdit }) 
           <div className="flex items-center gap-3 mt-1.5 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {entry.start_time}{entry.end_time ? ` – ${entry.end_time}` : ""}
+              {formatTime(entry.start_time)}{entry.end_time ? ` – ${formatTime(entry.end_time)}` : ""}
             </span>
             {entry.location && (
               <span className="flex items-center gap-1">

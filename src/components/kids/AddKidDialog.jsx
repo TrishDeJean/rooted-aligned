@@ -97,6 +97,7 @@ export default function AddKidDialog({ open, onOpenChange, editKid }) {
                 <SelectContent>
                   <SelectItem value="work_kid">Work Kid</SelectItem>
                   <SelectItem value="home_boy">Home Boy</SelectItem>
+                  <SelectItem value="niece">Niece</SelectItem>
                 </SelectContent>
               </Select>
             </div>

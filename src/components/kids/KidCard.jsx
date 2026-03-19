@@ -1,11 +1,17 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import KidAvatar from "./KidAvatar";
+import { cn } from "@/lib/utils";
 
-export default function KidCard({ kid, onClick }) {
+const typeLabel = { work_kid: "Work", home_boy: "Home", niece: "Niece" };
+
+export default function KidCard({ kid, onClick, onTogglePresence }) {
   return (
     <Card
-      className="p-4 cursor-pointer hover:shadow-md transition-all border-border/50 hover:border-primary/20"
+      className={cn(
+        "p-4 cursor-pointer hover:shadow-md transition-all border-border/50 hover:border-primary/20",
+        kid.is_present === false && "opacity-50"
+      )}
       onClick={() => onClick?.(kid)}
     >
       <div className="flex items-center gap-3">
@@ -17,14 +23,23 @@ export default function KidCard({ kid, onClick }) {
           )}
           <Badge
             variant="secondary"
-            className={kid.type === "work_kid"
-              ? "bg-primary/10 text-primary border-0 mt-1"
-              : "bg-secondary text-secondary-foreground border-0 mt-1"
-            }
+            className="bg-secondary text-secondary-foreground border-0 mt-1"
           >
-            {kid.type === "work_kid" ? "Work Kid" : "Home Boy"}
+            {typeLabel[kid.type] || kid.type}
           </Badge>
         </div>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onTogglePresence?.(kid); }}
+          className={cn(
+            "shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border transition-all",
+            kid.is_present !== false
+              ? "bg-primary/10 text-primary border-primary/20"
+              : "bg-muted text-muted-foreground border-border"
+          )}
+        >
+          {kid.is_present !== false ? "Here" : "Away"}
+        </button>
       </div>
       {kid.notes && (
         <p className="text-xs text-muted-foreground mt-3 line-clamp-2">{kid.notes}</p>

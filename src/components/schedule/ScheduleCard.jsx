@@ -5,6 +5,14 @@ import CategoryBadge from "./CategoryBadge";
 import KidAvatar from "../kids/KidAvatar";
 import { cn } from "@/lib/utils";
 
+function formatTime(time) {
+  if (!time) return "";
+  const [h, m] = time.split(":").map(Number);
+  const ampm = h >= 12 ? "pm" : "am";
+  const hour = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2, "0")} ${ampm}`;
+}
+
 export default function ScheduleCard({ entry, kids, onToggleComplete, onEdit }) {
   const entryKids = (entry.kids || [])
     .map(kidId => kids.find(k => k.id === kidId))

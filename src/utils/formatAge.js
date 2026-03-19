@@ -4,7 +4,7 @@
  */
 export function formatAge(birthday) {
   if (!birthday) return null;
-  const birth = new Date(birthday);
+  const birth = new Date(birthday + "T00:00:00");
   const now = new Date();
 
   let years = now.getFullYear() - birth.getFullYear();

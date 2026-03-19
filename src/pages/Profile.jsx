@@ -58,7 +58,7 @@ export default function Profile() {
               )}
               {me.birthday && (
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  🎂 {new Date(me.birthday).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  🎂 {new Date(me.birthday + "T00:00:00").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
                 </p>
               )}
               {me.notes && <p className="text-xs text-muted-foreground mt-2 line-clamp-2">{me.notes}</p>}

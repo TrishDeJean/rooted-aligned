@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import ScheduleCard from "@/components/schedule/ScheduleCard";
 import AddScheduleDialog from "@/components/schedule/AddScheduleDialog";
 import KidAvatar from "@/components/kids/KidAvatar";
+import PullToRefresh from "@/components/PullToRefresh";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -44,7 +45,13 @@ export default function Dashboard() {
   const nieces = kids.filter(k => k.type === "niece" && k.is_present !== false);
   const presentKidIds = kids.filter(k => k.is_present !== false).map(k => k.id);
 
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["scheduleEntries"] });
+    queryClient.invalidateQueries({ queryKey: ["kids"] });
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="space-y-6">
       {/* Greeting */}
       <div className="space-y-1">
@@ -164,5 +171,6 @@ export default function Dashboard() {
         editEntry={editEntry}
       />
     </div>
+    </PullToRefresh>
   );
 }

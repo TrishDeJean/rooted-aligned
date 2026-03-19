@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import KidAvatar from "./KidAvatar";
 import { cn } from "@/lib/utils";
+import { formatAge } from "@/utils/formatAge";
 
 const typeLabel = { work_kid: "Work", home_boy: "Home", niece: "Niece" };
 
@@ -18,8 +19,10 @@ export default function KidCard({ kid, onClick, onTogglePresence }) {
         <KidAvatar name={kid.name} color={kid.avatar_color} size="lg" />
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-foreground truncate">{kid.name}</h3>
-          {kid.age && (
-            <p className="text-sm text-muted-foreground">{kid.age} years old</p>
+          {(kid.birthday || kid.age) && (
+            <p className="text-sm text-muted-foreground">
+              {formatAge(kid.birthday) || `${kid.age} years old`}
+            </p>
           )}
           <Badge
             variant="secondary"

@@ -31,6 +31,7 @@ export default function Schedule() {
   });
 
   const isToday = format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
+  const presentKidIds = kids.filter(k => k.is_present !== false).map(k => k.id);
 
   // Generate week days for the date strip
   const weekDays = Array.from({ length: 7 }, (_, i) => {

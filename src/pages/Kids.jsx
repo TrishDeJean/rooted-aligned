@@ -17,6 +17,7 @@ export default function Kids() {
     queryFn: () => base44.entities.Kid.list(),
   });
 
+  const adults = kids.filter(k => k.type === "adult");
   const workKids = kids.filter(k => k.type === "work_kid");
   const homeBoys = kids.filter(k => k.type === "home_boy");
   const nieces = kids.filter(k => k.type === "niece");
@@ -45,9 +46,9 @@ export default function Kids() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Kids</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Profiles</h2>
         <Button onClick={handleAdd} size="sm">
-          <Plus className="h-4 w-4 mr-1" /> Add Kid
+          <Plus className="h-4 w-4 mr-1" /> Add Profile
         </Button>
       </div>
 
@@ -60,10 +61,11 @@ export default function Kids() {
       ) : kids.length === 0 ? (
         <Card className="p-8 text-center border-dashed">
           <Users className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" />
-          <p className="text-muted-foreground font-medium">No kids added yet</p>
+          <p className="text-muted-foreground font-medium">No profiles added yet</p>
         </Card>
       ) : (
         <div className="space-y-5">
+          <KidSection title="Me / Adults" list={adults} />
           <KidSection title="Work" list={workKids} />
           <KidSection title="Home" list={homeBoys} />
           {nieces.length > 0 && (

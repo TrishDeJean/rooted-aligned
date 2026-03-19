@@ -100,6 +100,7 @@ export default function AddKidDialog({ open, onOpenChange, editKid, defaultType 
                 <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="adult">Adult / Me</SelectItem>
                     <SelectItem value="work_kid">Work Kid</SelectItem>
                     <SelectItem value="home_boy">Home Boy</SelectItem>
                     <SelectItem value="niece">Niece</SelectItem>

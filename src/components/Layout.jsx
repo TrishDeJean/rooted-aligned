@@ -8,7 +8,7 @@ import AddScheduleDialog from "./schedule/AddScheduleDialog";
 const navItems = [
   { path: "/Dashboard", icon: LayoutDashboard, label: "Today" },
   { path: "/Schedule", icon: CalendarDays, label: "Schedule" },
-  { path: "/Kids", icon: Users, label: "Kids" },
+  { path: "/Kids", icon: Users, label: "Profiles" },
   { path: "/Profile", icon: UserCircle, label: "Profile" },
 ];
 

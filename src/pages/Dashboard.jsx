@@ -41,6 +41,8 @@ export default function Dashboard() {
   const total = entries.length;
   const workKids = kids.filter(k => k.type === "work_kid");
   const homeBoys = kids.filter(k => k.type === "home_boy");
+  const nieces = kids.filter(k => k.type === "niece" && k.is_present !== false);
+  const presentKidIds = kids.filter(k => k.is_present !== false).map(k => k.id);
 
   return (
     <div className="space-y-6">

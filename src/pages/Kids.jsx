@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import AddKidDialog from "@/components/kids/AddKidDialog";
 export default function Kids() {
   const [showDialog, setShowDialog] = useState(false);
   const [editKid, setEditKid] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: kids = [], isLoading } = useQuery({
     queryKey: ["kids"],
@@ -18,16 +19,28 @@ export default function Kids() {
 
   const workKids = kids.filter(k => k.type === "work_kid");
   const homeBoys = kids.filter(k => k.type === "home_boy");
+  const nieces = kids.filter(k => k.type === "niece");
 
-  const handleEdit = (kid) => {
-    setEditKid(kid);
-    setShowDialog(true);
+  const handleEdit = (kid) => { setEditKid(kid); setShowDialog(true); };
+  const handleAdd = () => { setEditKid(null); setShowDialog(true); };
+
+  const handleTogglePresence = async (kid) => {
+    await base44.entities.Kid.update(kid.id, { is_present: kid.is_present === false ? true : false });
+    queryClient.invalidateQueries({ queryKey: ["kids"] });
   };
 
-  const handleAdd = () => {
-    setEditKid(null);
-    setShowDialog(true);
-  };
+  const KidSection = ({ title, list }) => list.length === 0 ? null : (
+    <div>
+      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+        {title} ({list.length})
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {list.map(kid => (
+          <KidCard key={kid.id} kid={kid} onClick={handleEdit} onTogglePresence={handleTogglePresence} />
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -48,30 +61,22 @@ export default function Kids() {
         <Card className="p-8 text-center border-dashed">
           <Users className="h-10 w-10 mx-auto text-muted-foreground/30 mb-3" />
           <p className="text-muted-foreground font-medium">No kids added yet</p>
-          <p className="text-xs text-muted-foreground mt-1">Add your work kids and home boys to get started</p>
         </Card>
       ) : (
         <div className="space-y-5">
-          {workKids.length > 0 && (
+          <KidSection title="Work" list={workKids} />
+          <KidSection title="Home" list={homeBoys} />
+          {nieces.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Work ({workKids.length})
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {workKids.map(kid => (
-                  <KidCard key={kid.id} kid={kid} onClick={handleEdit} />
-                ))}
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Nieces ({nieces.length})
+                </h3>
+                <span className="text-xs text-muted-foreground">· tap Here/Away to toggle</span>
               </div>
-            </div>
-          )}
-          {homeBoys.length > 0 && (
-            <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
-                Home ({homeBoys.length})
-              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {homeBoys.map(kid => (
-                  <KidCard key={kid.id} kid={kid} onClick={handleEdit} />
+                {nieces.map(kid => (
+                  <KidCard key={kid.id} kid={kid} onClick={handleEdit} onTogglePresence={handleTogglePresence} />
                 ))}
               </div>
             </div>
@@ -79,11 +84,7 @@ export default function Kids() {
         </div>
       )}
 
-      <AddKidDialog
-        open={showDialog}
-        onOpenChange={setShowDialog}
-        editKid={editKid}
-      />
+      <AddKidDialog open={showDialog} onOpenChange={setShowDialog} editKid={editKid} />
     </div>
   );
 }

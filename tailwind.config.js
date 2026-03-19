@@ -89,6 +89,7 @@ module.exports = {
   	}
   },
   safelist: [
+    /* kid avatar / badge colors — kept as-is */
     "bg-pink-100", "text-pink-700",
     "bg-amber-100", "text-amber-700",
     "bg-sky-100", "text-sky-700",

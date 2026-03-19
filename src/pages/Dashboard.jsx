@@ -23,10 +23,26 @@ export default function Dashboard() {
   const [showEdit, setShowEdit] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: entries = [], isLoading: loadingEntries } = useQuery({
+  const { data: entriesForToday = [] } = useQuery({
     queryKey: ["scheduleEntries", today],
     queryFn: () => base44.entities.ScheduleEntry.filter({ date: today }, "start_time"),
   });
+
+  const { data: recurringEntries = [], isLoading: loadingEntries } = useQuery({
+    queryKey: ["recurringEntries"],
+    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true }),
+  });
+
+  const todayDayOfWeek = new Date().getDay();
+  const recurringForToday = recurringEntries.filter(e => {
+    const d = new Date(e.date + "T00:00:00");
+    return d.getDay() === todayDayOfWeek && e.date !== today;
+  });
+
+  const entries = [
+    ...entriesForToday,
+    ...recurringForToday.filter(r => !entriesForToday.some(e => e.id === r.id))
+  ].sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
 
   const { data: kids = [] } = useQuery({
     queryKey: ["kids"],

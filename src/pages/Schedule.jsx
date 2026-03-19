@@ -15,10 +15,26 @@ export default function Schedule() {
   const queryClient = useQueryClient();
   const dateStr = format(selectedDate, "yyyy-MM-dd");
 
-  const { data: entries = [], isLoading } = useQuery({
+  const { data: entriesForDate = [] } = useQuery({
     queryKey: ["scheduleEntries", dateStr],
     queryFn: () => base44.entities.ScheduleEntry.filter({ date: dateStr }, "start_time"),
   });
+
+  const { data: recurringEntries = [], isLoading } = useQuery({
+    queryKey: ["recurringEntries"],
+    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true }),
+  });
+
+  const dayOfWeek = selectedDate.getDay(); // 0=Sun..6=Sat
+  const recurringForDay = recurringEntries.filter(e => {
+    const d = new Date(e.date + "T00:00:00");
+    return d.getDay() === dayOfWeek && e.date !== dateStr;
+  });
+
+  const entries = [
+    ...entriesForDate,
+    ...recurringForDay.filter(r => !entriesForDate.some(e => e.id === r.id))
+  ].sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
 
   const { data: kids = [] } = useQuery({
     queryKey: ["kids"],

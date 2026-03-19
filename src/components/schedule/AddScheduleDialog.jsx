@@ -146,7 +146,7 @@ export default function AddScheduleDialog({ open, onOpenChange, editEntry }) {
 
           {kids.length > 0 && (
             <div>
-              <Label className="mb-2 block">Kids Involved</Label>
+              <Label className="mb-2 block">People Involved</Label>
               <div className="flex flex-wrap gap-2">
                 {kids.map(kid => (
                   <button

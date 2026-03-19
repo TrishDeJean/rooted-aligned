@@ -4,7 +4,7 @@ import KidAvatar from "./KidAvatar";
 import { cn } from "@/lib/utils";
 import { formatAge } from "@/utils/formatAge";
 
-const typeLabel = { work_kid: "Work", home_boy: "Home", niece: "Niece" };
+const typeLabel = { work_kid: "Work", home_boy: "Home", niece: "Niece", adult: "Adult" };
 
 export default function KidCard({ kid, onClick, onTogglePresence }) {
   return (

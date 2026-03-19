@@ -116,15 +116,17 @@ export default function Schedule() {
         </Card>
       ) : (
         <div className="space-y-2">
-          {entries.map(entry => (
-            <ScheduleCard
-              key={entry.id}
-              entry={entry}
-              kids={kids}
-              onToggleComplete={(id, completed) => toggleMutation.mutate({ id, completed })}
-              onEdit={(e) => { setEditEntry(e); setShowEdit(true); }}
-            />
-          ))}
+          {entries
+            .filter(entry => !entry.kids?.length || entry.kids.some(id => presentKidIds.includes(id)))
+            .map(entry => (
+              <ScheduleCard
+                key={entry.id}
+                entry={entry}
+                kids={kids}
+                onToggleComplete={(id, completed) => toggleMutation.mutate({ id, completed })}
+                onEdit={(e) => { setEditEntry(e); setShowEdit(true); }}
+              />
+            ))}
         </div>
       )}
 

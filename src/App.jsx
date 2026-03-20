@@ -50,14 +50,13 @@ const AuthenticatedApp = () => {
       <Route element={<Layout />}>
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Schedule" element={<Schedule />} />
+        <Route path="/Nourish" element={<Nourish />} />
+        <Route path="/Reset" element={<Reset />} />
         <Route path="/Profile" element={<Kids />} />
         <Route path="/Account" element={<Profile />} />
-        <Route path="/Nourish" element={<Nourish />} />
         <Route path="/TakeAMoment" element={<TakeAMoment />} />
         <Route path="/CheckIn" element={<CheckIn />} />
         <Route path="/ResetYourSpace" element={<ResetYourSpace />} />
-        <Route path="/Nourish" element={<Nourish />} />
-        <Route path="/Reset" element={<Reset />} />
         <Route path="/KitchenPlan" element={<KitchenPlan />} />
         <Route path="/KitchenList" element={<KitchenList />} />
         <Route path="/Pantry" element={<Pantry />} />

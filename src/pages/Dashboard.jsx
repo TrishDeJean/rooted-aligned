@@ -10,6 +10,7 @@ import KidAvatar from "@/components/kids/KidAvatar";
 import PullToRefresh from "@/components/PullToRefresh";
 import KidScheduleDrawer from "@/components/kids/KidScheduleDrawer";
 import NotesSection from "@/components/notes/NotesSection";
+import { useQuery as useStartersQuery } from "@tanstack/react-query";
 
 function getGreeting() {
   const hour = new Date().getHours();

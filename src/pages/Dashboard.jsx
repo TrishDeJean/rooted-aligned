@@ -63,6 +63,16 @@ export default function Dashboard() {
     queryFn: () => base44.entities.Kid.list(),
   });
 
+  const { data: lastCheckIn } = useQuery({
+    queryKey: ["lastCheckIn"],
+    queryFn: () => base44.entities.CheckInLog.list("-checked_at", 1),
+    select: (data) => data?.[0] ?? null,
+  });
+
+  const isLowEnergy = ["overwhelmed", "exhausted", "anxious", "low"].some(
+    m => lastCheckIn?.mood?.toLowerCase().includes(m)
+  );
+
   const { data: starters = [] } = useQuery({
     queryKey: ["starters"],
     queryFn: () => base44.entities.Starter.list(),

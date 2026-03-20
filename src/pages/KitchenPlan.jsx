@@ -97,6 +97,56 @@ function MealField({ label, emoji, value, onChange, onAddIngredients, isSnacks }
   );
 }
 
+function RunningLowInput({ local, handleChange }) {
+  const [draft, setDraft] = useState("");
+
+  const mergeIntoGroceries = () => {
+    const newItems = draft
+      .split(/[\n,]+/)
+      .map(l => l.trim())
+      .filter(Boolean);
+    if (!newItems.length) return;
+
+    const existing = (local.week_groceries || "")
+      .split("\n")
+      .map(l => l.trim())
+      .filter(Boolean);
+
+    const existingNames = new Set(
+      existing.map(l => l.split(" — ")[0].toLowerCase())
+    );
+
+    const toAdd = newItems.filter(item => !existingNames.has(item.toLowerCase()));
+    if (!toAdd.length) { setDraft(""); return; }
+
+    const merged = [...existing, ...toAdd].join("\n");
+    handleChange("week_groceries", merged);
+    setDraft("");
+  };
+
+  return (
+    <div className="space-y-2">
+      <Textarea
+        value={draft}
+        onChange={e => setDraft(e.target.value)}
+        placeholder={"butter\neggs\ntoothpaste…"}
+        rows={3}
+        className="resize-none text-sm bg-background/60 border-border/40 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40"
+      />
+      {draft.trim() && (
+        <div className="flex justify-end">
+          <button
+            onClick={mergeIntoGroceries}
+            className="text-xs font-medium text-primary-foreground bg-primary/80 hover:bg-primary rounded-lg px-4 py-1.5 transition-colors"
+          >
+            Add to grocery list
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function KitchenPlan() {
   const [weekOffset, setWeekOffset] = useState(0);
   const weekStart = getWeekStart(weekOffset);

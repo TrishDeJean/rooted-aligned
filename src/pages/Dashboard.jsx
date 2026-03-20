@@ -23,6 +23,7 @@ export default function Dashboard() {
   const greeting = getGreeting();
   const [editEntry, setEditEntry] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
+  const [selectedKid, setSelectedKid] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: entriesForToday = [] } = useQuery({

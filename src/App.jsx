@@ -14,6 +14,7 @@ import Nourish from './pages/Nourish';
 import TakeAMoment from './pages/TakeAMoment';
 import CheckIn from './pages/CheckIn';
 import ResetYourSpace from './pages/ResetYourSpace';
+import KitchenPlan from './pages/KitchenPlan';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {

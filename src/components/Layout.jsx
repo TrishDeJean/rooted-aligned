@@ -18,7 +18,7 @@ export default function Layout() {
 
   return (
     <div
-      className="h-[100dvh] bg-background flex flex-col overflow-hidden"
+      className="min-h-screen bg-background flex flex-col"
       style={{
         paddingTop: "env(safe-area-inset-top)",
         paddingLeft: "env(safe-area-inset-left)",
@@ -47,7 +47,7 @@ export default function Layout() {
 
       {/* Page Content with transitions */}
       <main
-        className="flex-1 max-w-3xl mx-auto w-full px-4 py-6 overflow-y-auto min-h-0"
+        className="flex-1 max-w-3xl mx-auto w-full px-4 py-6 overflow-y-auto"
         style={{ paddingBottom: `calc(5rem + env(safe-area-inset-bottom))` }}
       >
         <AnimatePresence mode="wait">

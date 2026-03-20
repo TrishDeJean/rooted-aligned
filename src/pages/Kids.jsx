@@ -69,7 +69,7 @@ export default function Kids() {
       ) : (
         <div className="space-y-5">
           <KidSection title="You" list={adults} />
-          <KidSection title="Work" list={workKids} />
+          <KidSection title="Work Kids" list={workKids} />
           <KidSection title="Home" list={homeBoys} />
           {nieces.length > 0 && (
             <div>

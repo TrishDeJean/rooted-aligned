@@ -16,7 +16,12 @@ export default function KidCard({ kid, onClick, onTogglePresence }) {
       onClick={() => onClick?.(kid)}
     >
       <div className="flex items-center gap-3">
-        <KidAvatar name={kid.name} color={kid.avatar_color} size="lg" />
+        <div className="relative">
+          <KidAvatar name={kid.name} color={kid.avatar_color} size="lg" />
+          <div className={`absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full border-2 border-card ${
+            kid.is_present !== false ? "bg-primary" : "bg-muted-foreground/25"
+          }`} />
+        </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-foreground truncate">{kid.name}</h3>
           {(kid.birthday || kid.age) && (

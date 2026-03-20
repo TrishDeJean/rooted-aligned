@@ -7,10 +7,10 @@ import { CheckCircle2, Circle } from "lucide-react";
 
 const STEPS = [
   { key: "dough_started", label: "Dough Started", emoji: "🌿", description: "Autolyse or mix your dough" },
-  { key: "stretch_fold_1", label: "Stretch & Fold 1", emoji: "🤲", description: "Gentle folds, 30 min after mix" },
-  { key: "stretch_fold_2", label: "Stretch & Fold 2", emoji: "🤲", description: "30 min later" },
-  { key: "stretch_fold_3", label: "Stretch & Fold 3", emoji: "🤲", description: "30 min later" },
-  { key: "stretch_fold_4", label: "Stretch & Fold 4", emoji: "🤲", description: "30 min later" },
+  { key: "stretch_fold_1", label: "First Fold", emoji: "🤲", description: "Gentle folds, 30 min after mix" },
+  { key: "stretch_fold_2", label: "Second Fold", emoji: "🤲", description: "30 min later" },
+  { key: "stretch_fold_3", label: "Third Fold", emoji: "🤲", description: "30 min later" },
+  { key: "stretch_fold_4", label: "Final Fold", emoji: "🤲", description: "30 min later" },
   { key: "bulk_ferment", label: "Bulk Ferment", emoji: "⏳", description: "Until doubled & bubbly" },
   { key: "shape", label: "Shape", emoji: "🫳", description: "Pre-shape, bench rest, final shape" },
   { key: "bake_time", label: "Bake", emoji: "🔥", description: "Into the oven it goes" },

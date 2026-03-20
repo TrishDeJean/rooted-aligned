@@ -22,8 +22,8 @@ const VARIETIES = [
 ];
 
 const QUICK_LOGS = [
-  { key: "fed_all", label: "🌾 Fed all starters", type: "fed_all" },
-  { key: "baked", label: "🍞 Baked 4 loaves", type: "baked_loaves", loaves_count: 4 },
+  { key: "fed_all", label: "🌾 Cared for all starters", type: "fed_all" },
+  { key: "baked", label: "🍞 Baked four loaves today", type: "baked_loaves", loaves_count: 4 },
   { key: "discard", label: "♻️ Used discard for pancakes", type: "discard_used" },
 ];
 
@@ -74,7 +74,7 @@ export default function Nourish() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nourish</h2>
-          <p className="text-sm text-muted-foreground/70 italic">{["A little care goes a long way.", "Tend to what grows.", "Slow and steady."][new Date().getDay() % 3]}</p>
+          <p className="text-sm text-muted-foreground/70 italic">{["Slow and steady.", "Care for what you're growing.", "Small moments, big results.", "Tend to your craft.", "A little care goes a long way.", "Tend to what grows."][new Date().getDay() % 6]}</p>
         </div>
         {activeTab === "starters" && (
           <Button size="sm" onClick={() => { setEditStarter(null); setShowAddStarter(true); }}>

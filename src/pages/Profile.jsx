@@ -34,7 +34,10 @@ export default function Profile() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold tracking-tight">You</h2>
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">You</h2>
+        <p className="text-sm text-muted-foreground/60 italic">{["Come back to yourself.", "A moment just for you.", "Breathe, you're here."][new Date().getDay() % 3]}</p>
+      </div>
 
       {isLoading ? (
         <Card className="h-32 animate-pulse bg-muted/50" />
@@ -87,7 +90,7 @@ export default function Profile() {
             className="w-full flex items-center gap-3 p-4 text-left hover:bg-destructive/5 transition-colors rounded-b-xl"
           >
             <Trash2 className="h-4 w-4 text-destructive" />
-            <span className="text-sm font-medium text-destructive">Clear Your Space</span>
+            <span className="text-sm font-medium text-destructive">Start Fresh</span>
           </button>
         </Card>
       </div>

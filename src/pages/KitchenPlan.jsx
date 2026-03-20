@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, startOfWeek, addDays } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft, ChevronRight, ShoppingBag, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingBag, Plus, Trash2 } from "lucide-react";
 
 import { Link } from "react-router-dom";
 
@@ -163,6 +163,10 @@ export default function KitchenPlan() {
   });
 
   const [local, setLocal] = useState({});
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [clearMessage, setClearMessage] = useState(null);
+  const [undoTimeout, setUndoTimeout] = useState(null);
+  const [backupLocal, setBackupLocal] = useState(null);
 
   useEffect(() => {
     if (plan) setLocal(plan);
@@ -200,6 +204,33 @@ export default function KitchenPlan() {
     : weekOffset === 1 ? "Next week"
     : weekOffset === -1 ? "Last week"
     : format(weekStart, "MMM d");
+
+  const handleClearWeekly = () => {
+    setBackupLocal(local);
+    const cleared = {
+      ...local,
+      intentions: "",
+      ...Object.fromEntries(DAYS.flatMap(({ key }) =>
+        MEALS.map(({ key: mKey }) => [`${key}_${mKey}`, ""])
+      )),
+    };
+    setLocal(cleared);
+    debouncedSave(cleared);
+    setShowClearConfirm(false);
+    setClearMessage(true);
+
+    const timeout = setTimeout(() => setClearMessage(null), 3000);
+    setUndoTimeout(timeout);
+  };
+
+  const handleUndoWeekly = () => {
+    if (backupLocal) {
+      setLocal(backupLocal);
+      debouncedSave(backupLocal);
+      setClearMessage(null);
+      if (undoTimeout) clearTimeout(undoTimeout);
+    }
+  };
 
   return (
     <div className="space-y-8 pb-6">
@@ -330,6 +361,58 @@ export default function KitchenPlan() {
         </div>
         <ChevronRight className="h-4 w-4 text-muted-foreground/40" />
       </Link>
+
+      {/* Clear Message / Undo */}
+      {clearMessage && (
+        <Card className="p-3 bg-secondary/40 border-border/40 flex items-center justify-between">
+          <p className="text-sm text-foreground">Weekly menu cleared.</p>
+          <button
+            onClick={handleUndoWeekly}
+            className="text-xs font-medium text-primary hover:underline"
+          >
+            Undo
+          </button>
+        </Card>
+      )}
+
+      {/* Clear Confirmation Modal */}
+      {showClearConfirm && (
+        <div className="fixed inset-0 bg-black/30 flex items-end z-50">
+          <Card className="w-full rounded-t-2xl p-5 space-y-4 bg-card border-t border-border/40">
+            <div>
+              <p className="text-base font-semibold text-foreground">Clear this week's menu?</p>
+              <p className="text-sm text-muted-foreground mt-1">This will remove all meals and notes for the week.</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowClearConfirm(false)}
+                className="flex-1 text-sm font-medium py-2.5 rounded-lg border border-border/60 bg-background text-foreground hover:bg-muted/30 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleClearWeekly}
+                className="flex-1 text-sm font-medium py-2.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                Confirm clear
+              </button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {/* Clear Button */}
+      {!showClearConfirm && !clearMessage && (
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={() => setShowClearConfirm(true)}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-destructive transition-colors"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Clear weekly menu
+          </button>
+        </div>
+      )}
 
       <p className="text-center text-xs text-muted-foreground/40 italic pt-2">
         This is here to support you, not to pressure you.

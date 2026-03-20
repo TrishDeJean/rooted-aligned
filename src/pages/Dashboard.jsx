@@ -39,10 +39,18 @@ export default function Dashboard() {
     return d.getDay() === todayDayOfWeek && e.date !== today;
   });
 
+  const seen = new Set();
   const entries = [
     ...entriesForToday,
     ...recurringForToday.filter(r => !entriesForToday.some(e => e.id === r.id))
-  ].sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
+  ]
+    .sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""))
+    .filter(e => {
+      const key = `${e.title}-${e.start_time}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
 
   const { data: kids = [] } = useQuery({
     queryKey: ["kids"],

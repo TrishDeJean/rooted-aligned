@@ -13,6 +13,7 @@ import KidScheduleDrawer from "@/components/kids/KidScheduleDrawer";
 import NotesSection from "@/components/notes/NotesSection";
 import FocusOfDay from "@/components/dashboard/FocusOfDay";
 import OnYourMind from "@/components/dashboard/OnYourMind";
+import MealsToday from "@/components/dashboard/MealsToday";
 
 function getGreeting() {
   const hour = new Date().getHours();

@@ -9,6 +9,7 @@ import KidAvatar from "@/components/kids/KidAvatar";
 import AddKidDialog from "@/components/kids/AddKidDialog";
 import { formatAge } from "@/utils/formatAge";
 import { Link } from "react-router-dom";
+import TodaysIntention from "@/components/profile/TodaysIntention";
 
 export default function Profile() {
   const [showEdit, setShowEdit] = useState(false);

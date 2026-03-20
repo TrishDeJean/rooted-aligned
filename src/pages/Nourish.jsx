@@ -24,7 +24,7 @@ const VARIETIES = [
 const QUICK_LOGS = [
   { key: "fed_all", label: "🌾 Fed all starters", type: "fed_all" },
   { key: "baked", label: "🍞 Baked 4 loaves", type: "baked_loaves", loaves_count: 4 },
-  { key: "discard", label: "♻️ Discard used", type: "discard_used" },
+  { key: "discard", label: "♻️ Used discard for pancakes", type: "discard_used" },
 ];
 
 export default function Nourish() {
@@ -172,7 +172,7 @@ export default function Nourish() {
                 <Card key={log.id} className="p-3 flex items-center gap-3">
                   <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium capitalize">{log.log_type.replace(/_/g, " ")}</p>
+                    <p className="text-sm font-medium capitalize">{log.log_type === "bake_step" ? "Bake moment" : log.log_type.replace(/_/g, " ")}</p>
                     {log.notes && <p className="text-xs text-muted-foreground">{log.notes}</p>}
                   </div>
                   <span className="text-xs text-muted-foreground shrink-0">

@@ -1,22 +1,17 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { format, startOfWeek, addDays } from "date-fns";
+import { format, startOfWeek } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ShoppingBag, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-const DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
-
 const CATEGORIES = [
-  { key: "produce",   label: "🥦 Produce" },
-  { key: "dairy",     label: "🥛 Dairy" },
-  { key: "pantry",    label: "🫙 Pantry" },
-  { key: "baking",    label: "🍞 Bread & Baking" },
-  { key: "snacks",    label: "🍎 Snacks" },
-  { key: "freezer",   label: "❄️ Freezer" },
-  { key: "other",     label: "🛒 Other" },
+  { key: "fresh",  label: "🥬 Fresh" },
+  { key: "fridge", label: "🧊 Fridge" },
+  { key: "pantry", label: "🫙 Pantry" },
+  { key: "other",  label: "🛒 Other" },
 ];
 
 function getWeekStart() {
@@ -24,16 +19,26 @@ function getWeekStart() {
 }
 
 function parseItems(plan) {
-  const all = [];
-  DAYS.forEach(day => {
-    const raw = plan?.[`${day}_groceries`] || "";
-    raw.split("\n").forEach(line => {
-      const text = line.trim();
-      if (text) all.push(text);
-    });
+  const raw = plan?.week_groceries || "";
+  const items = [];
+  raw.split("\n").forEach(line => {
+    const text = line.trim();
+    if (!text) return;
+    const sepIdx = text.indexOf(" — ");
+    if (sepIdx > -1) {
+      items.push({ id: text, name: text.slice(0, sepIdx).trim(), context: text.slice(sepIdx + 3).trim() });
+    } else {
+      items.push({ id: text, name: text, context: null });
+    }
   });
-  // dedupe
-  return [...new Set(all)];
+  // dedupe by lowercased name (keep first occurrence)
+  const seen = new Set();
+  return items.filter(item => {
+    const key = item.name.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 export default function KitchenList() {
@@ -48,7 +53,6 @@ export default function KitchenList() {
     },
   });
 
-  // itemStates: { [text]: { checked: bool, category: string } }
   const [itemStates, setItemStates] = useState(() => {
     try { return JSON.parse(localStorage.getItem(storageKey) || "{}"); }
     catch { return {}; }
@@ -60,30 +64,23 @@ export default function KitchenList() {
 
   const items = parseItems(plan);
 
-  const toggle = (text) => {
-    setItemStates(prev => ({
-      ...prev,
-      [text]: { ...prev[text], checked: !prev[text]?.checked }
-    }));
+  const toggle = (id) => {
+    setItemStates(prev => ({ ...prev, [id]: { ...prev[id], checked: !prev[id]?.checked } }));
   };
 
-  const setCategory = (text, category) => {
-    setItemStates(prev => ({
-      ...prev,
-      [text]: { ...prev[text], category }
-    }));
+  const setCategory = (id, category) => {
+    setItemStates(prev => ({ ...prev, [id]: { ...prev[id], category } }));
   };
 
-  // group items by category
   const grouped = {};
   CATEGORIES.forEach(c => { grouped[c.key] = []; });
-  items.forEach(text => {
-    const cat = itemStates[text]?.category || "other";
-    if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(text);
+  items.forEach(item => {
+    const cat = itemStates[item.id]?.category || "other";
+    grouped[cat] = grouped[cat] || [];
+    grouped[cat].push(item);
   });
 
-  const checkedCount = items.filter(t => itemStates[t]?.checked).length;
+  const checkedCount = items.filter(i => itemStates[i.id]?.checked).length;
 
   return (
     <div className="space-y-6 pb-8">
@@ -103,17 +100,13 @@ export default function KitchenList() {
       {items.length === 0 ? (
         <Card className="p-8 text-center border-dashed space-y-2">
           <p className="text-muted-foreground font-medium">Nothing here yet</p>
-          <p className="text-xs text-muted-foreground/60">
-            Add items under "Need this week" in your Kitchen Plan
-          </p>
-          <Link to="/KitchenPlan" className="text-xs text-primary hover:underline block mt-1">
-            Go to Kitchen Plan →
-          </Link>
+          <p className="text-xs text-muted-foreground/60">Add items in "Need this week" in your Kitchen Plan</p>
+          <Link to="/KitchenPlan" className="text-xs text-primary hover:underline block mt-1">Go to Kitchen Plan →</Link>
         </Card>
       ) : (
         <>
           {checkedCount > 0 && (
-            <p className="text-xs text-muted-foreground/60 text-center">
+            <p className="text-xs text-muted-foreground/50 text-center">
               {checkedCount} of {items.length} picked up ✓
             </p>
           )}
@@ -126,12 +119,15 @@ export default function KitchenList() {
                 <div key={key} className="space-y-2">
                   <p className="text-xs font-semibold text-muted-foreground tracking-wide uppercase px-1">{label}</p>
                   <Card className="divide-y divide-border/40 overflow-hidden">
-                    {catItems.map(text => {
-                      const state = itemStates[text] || {};
+                    {catItems.map(item => {
+                      const state = itemStates[item.id] || {};
                       return (
-                        <div key={text} className={cn("flex items-center gap-3 px-4 py-3 group", state.checked && "bg-muted/30")}>
+                        <div
+                          key={item.id}
+                          className={cn("flex items-center gap-3 px-4 py-3 group transition-colors", state.checked && "bg-muted/30")}
+                        >
                           <button
-                            onClick={() => toggle(text)}
+                            onClick={() => toggle(item.id)}
                             className={cn(
                               "h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all",
                               state.checked
@@ -141,12 +137,17 @@ export default function KitchenList() {
                           >
                             {state.checked && <Check className="h-3 w-3" />}
                           </button>
-                          <span className={cn("flex-1 text-sm", state.checked && "line-through text-muted-foreground/50")}>
-                            {text}
-                          </span>
+                          <div className="flex-1 min-w-0">
+                            <p className={cn("text-sm leading-snug", state.checked && "line-through text-muted-foreground/40")}>
+                              {item.name}
+                            </p>
+                            {item.context && !state.checked && (
+                              <p className="text-[10px] text-muted-foreground/45 mt-0.5">{item.context}</p>
+                            )}
+                          </div>
                           <select
                             value={state.category || "other"}
-                            onChange={e => setCategory(text, e.target.value)}
+                            onChange={e => setCategory(item.id, e.target.value)}
                             className="text-[10px] text-muted-foreground/50 bg-transparent border-none outline-none cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
                           >
                             {CATEGORIES.map(c => (

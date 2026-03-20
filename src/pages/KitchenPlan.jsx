@@ -4,17 +4,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, startOfWeek, addDays } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft, ChevronRight, ShoppingBag } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ChevronLeft, ChevronRight, ShoppingBag, Plus, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const DAYS = [
-  { label: "Sunday",    key: "sun" },
-  { label: "Monday",    key: "mon" },
-  { label: "Tuesday",   key: "tue" },
+  { label: "Sunday", key: "sun" },
+  { label: "Monday", key: "mon" },
+  { label: "Tuesday", key: "tue" },
   { label: "Wednesday", key: "wed" },
-  { label: "Thursday",  key: "thu" },
-  { label: "Friday",    key: "fri" },
-  { label: "Saturday",  key: "sat" },
+  { label: "Thursday", key: "thu" },
+  { label: "Friday", key: "fri" },
+  { label: "Saturday", key: "sat" },
 ];
 
 const MEALS = [
@@ -25,8 +26,7 @@ const MEALS = [
 ];
 
 function getWeekStart(offset = 0) {
-  const base = startOfWeek(new Date(), { weekStartsOn: 0 });
-  return addDays(base, offset * 7);
+  return addDays(startOfWeek(new Date(), { weekStartsOn: 0 }), offset * 7);
 }
 
 function useDebounce(fn, delay = 900) {
@@ -37,19 +37,53 @@ function useDebounce(fn, delay = 900) {
   };
 }
 
-function MealField({ label, emoji, value, onChange }) {
+function MealField({ label, emoji, value, onChange, onAddIngredient, isSnacks }) {
+  const [adding, setAdding] = useState(false);
+  const [ingredient, setIngredient] = useState("");
+
+  const handleAdd = () => {
+    if (!ingredient.trim()) { setAdding(false); return; }
+    onAddIngredient(ingredient.trim());
+    setIngredient("");
+    setAdding(false);
+  };
+
   return (
-    <div className="space-y-1">
-      <p className="text-[11px] font-semibold text-muted-foreground tracking-wide uppercase flex items-center gap-1">
-        <span>{emoji}</span> {label}
-      </p>
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <p className="text-[11px] font-semibold text-muted-foreground tracking-wide uppercase flex items-center gap-1">
+          <span>{emoji}</span> {label}
+        </p>
+        <button
+          onClick={() => setAdding(v => !v)}
+          className="text-[10px] text-muted-foreground/40 hover:text-primary transition-colors flex items-center gap-0.5"
+        >
+          <Plus className="h-2.5 w-2.5" /> add to list
+        </button>
+      </div>
       <Textarea
         value={value || ""}
         onChange={e => onChange(e.target.value)}
-        placeholder={`What's for ${label.toLowerCase()}?`}
+        placeholder={isSnacks ? "Little things to have on hand…" : `What's for ${label.toLowerCase()}?`}
         rows={2}
         className="resize-none text-sm bg-background/60 border-border/50 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40 focus:ring-primary/10"
       />
+      {adding && (
+        <div className="flex gap-2 items-center">
+          <Input
+            value={ingredient}
+            onChange={e => setIngredient(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") handleAdd(); if (e.key === "Escape") setAdding(false); }}
+            placeholder="Add an ingredient…"
+            className="text-sm h-8 rounded-xl border-border/50 flex-1"
+            autoFocus
+          />
+          <button onClick={handleAdd} className="text-xs text-primary font-medium hover:text-primary/80 shrink-0 px-1">Add</button>
+          <button onClick={() => setAdding(false)} className="text-muted-foreground hover:text-foreground shrink-0">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -59,7 +93,6 @@ export default function KitchenPlan() {
   const weekStart = getWeekStart(weekOffset);
   const weekStartStr = format(weekStart, "yyyy-MM-dd");
   const todayStr = format(new Date(), "yyyy-MM-dd");
-
   const queryClient = useQueryClient();
 
   const { data: plan, isLoading } = useQuery({
@@ -73,20 +106,14 @@ export default function KitchenPlan() {
   const [local, setLocal] = useState({});
 
   useEffect(() => {
-    if (plan) {
-      setLocal(plan);
-    } else {
-      setLocal({ week_start: weekStartStr });
-    }
+    if (plan) setLocal(plan);
+    else setLocal({ week_start: weekStartStr });
   }, [plan, weekStartStr]);
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
-      if (data.id) {
-        return base44.entities.MealPlan.update(data.id, data);
-      } else {
-        return base44.entities.MealPlan.create(data);
-      }
+      if (data.id) return base44.entities.MealPlan.update(data.id, data);
+      return base44.entities.MealPlan.create(data);
     },
     onSuccess: (saved) => {
       setLocal(saved);
@@ -103,12 +130,16 @@ export default function KitchenPlan() {
     debouncedSave(updated);
   };
 
-  const weekLabel = weekOffset === 0
-    ? "This week"
-    : weekOffset === 1
-    ? "Next week"
-    : weekOffset === -1
-    ? "Last week"
+  const handleAddIngredient = (dayLabel, mealLabel, item) => {
+    const line = `${item} — for ${mealLabel} (${dayLabel})`;
+    const existing = local.week_groceries || "";
+    const updated = existing ? `${existing}\n${line}` : line;
+    handleChange("week_groceries", updated);
+  };
+
+  const weekLabel = weekOffset === 0 ? "This week"
+    : weekOffset === 1 ? "Next week"
+    : weekOffset === -1 ? "Last week"
     : format(weekStart, "MMM d");
 
   return (
@@ -132,14 +163,14 @@ export default function KitchenPlan() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => setWeekOffset(w => w - 1)}
-          className="h-9 w-9 rounded-xl border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-all"
+          className="h-9 w-9 rounded-xl border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground transition-all"
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
         <span className="text-sm font-medium text-foreground/70">{weekLabel}</span>
         <button
           onClick={() => setWeekOffset(w => w + 1)}
-          className="h-9 w-9 rounded-xl border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-border transition-all"
+          className="h-9 w-9 rounded-xl border border-border/60 flex items-center justify-center text-muted-foreground hover:text-foreground transition-all"
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -161,7 +192,7 @@ export default function KitchenPlan() {
       {/* Days */}
       {isLoading ? (
         <div className="space-y-4">
-          {[1,2,3].map(i => <Card key={i} className="h-48 animate-pulse bg-muted/40" />)}
+          {[1, 2, 3].map(i => <Card key={i} className="h-48 animate-pulse bg-muted/40" />)}
         </div>
       ) : (
         <div className="space-y-5">
@@ -173,23 +204,17 @@ export default function KitchenPlan() {
               <Card
                 key={key}
                 className={`p-5 space-y-4 transition-all ${
-                  isToday
-                    ? "border-primary/30 bg-primary/5 shadow-sm"
-                    : "border-border/50 bg-card"
+                  isToday ? "border-primary/30 bg-primary/5 shadow-sm" : "border-border/50 bg-card"
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <h3 className={`font-bold text-base ${isToday ? "text-primary" : "text-foreground"}`}>
-                    {label}
-                  </h3>
+                  <h3 className={`font-bold text-base ${isToday ? "text-primary" : "text-foreground"}`}>{label}</h3>
                   <span className="text-xs text-muted-foreground/50">{format(date, "MMM d")}</span>
                   {isToday && (
-                    <span className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                      Today
-                    </span>
+                    <span className="ml-auto text-[10px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">Today</span>
                   )}
                 </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {MEALS.map(({ key: mKey, label: mLabel, emoji }) => (
                     <MealField
                       key={mKey}
@@ -197,20 +222,10 @@ export default function KitchenPlan() {
                       emoji={emoji}
                       value={local[`${key}_${mKey}`]}
                       onChange={val => handleChange(`${key}_${mKey}`, val)}
+                      onAddIngredient={(item) => handleAddIngredient(label, mLabel, item)}
+                      isSnacks={mKey === "snacks"}
                     />
                   ))}
-                </div>
-                <div className="space-y-1 pt-1 border-t border-border/30">
-                  <p className="text-[11px] font-semibold text-muted-foreground tracking-wide uppercase flex items-center gap-1">
-                    🛒 Need this week
-                  </p>
-                  <Textarea
-                    value={local[`${key}_groceries`] || ""}
-                    onChange={e => handleChange(`${key}_groceries`, e.target.value)}
-                    placeholder={"One item per line…"}
-                    rows={2}
-                    className="resize-none text-sm bg-background/60 border-border/50 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40 focus:ring-primary/10"
-                  />
                 </div>
               </Card>
             );
@@ -218,7 +233,24 @@ export default function KitchenPlan() {
         </div>
       )}
 
-      {/* Footer */}
+      {/* Weekly grocery section */}
+      <Card className="p-5 space-y-3 bg-secondary/30 border-border/40">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold text-foreground">🛒 Need this week</p>
+            <p className="text-xs text-muted-foreground/50 mt-0.5">One item per line — feeds your Kitchen List</p>
+          </div>
+          <Link to="/KitchenList" className="text-xs text-primary hover:underline">View list →</Link>
+        </div>
+        <Textarea
+          value={local.week_groceries || ""}
+          onChange={e => handleChange("week_groceries", e.target.value)}
+          placeholder={"milk\nbread\nlemon…"}
+          rows={4}
+          className="resize-none text-sm bg-background/60 border-border/40 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40"
+        />
+      </Card>
+
       <p className="text-center text-xs text-muted-foreground/40 italic pt-2">
         This is here to support you, not to pressure you.
       </p>

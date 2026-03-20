@@ -14,6 +14,13 @@ const STARTER_NAMES = [
   "Rogue", "Gaia", "Solene", "Amenadiel", "Ezekiel", "Celeste"
 ];
 
+const VARIETIES = [
+  { key: "all_purpose", label: "Unbleached All Purpose", emoji: "🌾" },
+  { key: "half_half", label: "Half & Half", emoji: "⚖️" },
+  { key: "whole_wheat", label: "Whole Wheat", emoji: "🌿" },
+  { key: "chocolate", label: "Chocolate", emoji: "🍫" },
+];
+
 const QUICK_LOGS = [
   { key: "fed_all", label: "🌾 Fed all starters", type: "fed_all" },
   { key: "baked", label: "🍞 Baked 4 loaves", type: "baked_loaves", loaves_count: 4 },
@@ -115,13 +122,26 @@ export default function Nourish() {
                   🌾 {feedAllMutation.isPending ? "Feeding..." : "Feed All Starters"}
                 </Button>
               )}
-              {starters.map(starter => (
-                <StarterCard
-                  key={starter.id}
-                  starter={starter}
-                  onEdit={(s) => { setEditStarter(s); setShowAddStarter(true); }}
-                />
-              ))}
+              {VARIETIES.map(({ key, label, emoji }) => {
+                const group = starters.filter(s => s.variety === key);
+                const ungrouped = key === "all_purpose" && starters.filter(s => !s.variety);
+                const list = key === "all_purpose" ? [...group, ...starters.filter(s => !s.variety)] : group;
+                if (list.length === 0) return null;
+                return (
+                  <div key={key} className="space-y-2">
+                    <h3 className="text-xs font-semibold text-muted-foreground tracking-wide">
+                      {emoji} {label} ({list.length})
+                    </h3>
+                    {list.map(starter => (
+                      <StarterCard
+                        key={starter.id}
+                        starter={starter}
+                        onEdit={(s) => { setEditStarter(s); setShowAddStarter(true); }}
+                      />
+                    ))}
+                  </div>
+                );
+              })}
             </>
           )}
         </div>

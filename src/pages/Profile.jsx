@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { User, Cake, Pencil, Trash2, AlertTriangle, LogOut, Wind, Heart, Sparkles } from "lucide-react";
+import { User, Cake, Pencil, Trash2, AlertTriangle, LogOut, Wind, Heart, Sparkles, Settings } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,12 @@ export default function Profile() {
   const { data: people = [], isLoading } = useQuery({
     queryKey: ["kids"],
     queryFn: () => base44.entities.Kid.list(),
+  });
+
+  const { data: lastCheckIn } = useQuery({
+    queryKey: ["lastCheckIn"],
+    queryFn: () => base44.entities.CheckInLog.list("-checked_at", 1),
+    select: (data) => data?.[0] ?? null,
   });
 
   const me = people.find(p => p.type === "adult");

@@ -9,7 +9,7 @@ const navItems = [
   { path: "/Dashboard", icon: LayoutDashboard, label: "Today" },
   { path: "/Schedule", icon: CalendarDays, label: "Flow" },
   { path: "/Nourish", icon: Leaf, label: "Nourish" },
-  { path: "/KitchenPlan", icon: UtensilsCrossed, label: "Kitchen" },
+  { path: "/KitchenPlan", icon: CookingPot, label: "Kitchen" },
   { path: "/Profile", icon: Users, label: "Your People" },
   { path: "/Account", icon: UserCircle, label: "You" },
 ];

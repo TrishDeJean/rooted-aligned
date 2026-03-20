@@ -8,6 +8,8 @@ import ScheduleCard from "@/components/schedule/ScheduleCard";
 import AddScheduleDialog from "@/components/schedule/AddScheduleDialog";
 import KidAvatar from "@/components/kids/KidAvatar";
 import PullToRefresh from "@/components/PullToRefresh";
+import KidScheduleDrawer from "@/components/kids/KidScheduleDrawer";
+import NotesSection from "@/components/notes/NotesSection";
 
 function getGreeting() {
   const hour = new Date().getHours();

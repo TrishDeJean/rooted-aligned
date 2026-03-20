@@ -35,7 +35,7 @@ export default function MealsToday() {
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
           <Utensils className="h-4 w-4 text-accent" />
-          Meals today
+          Meals today 🍽️
         </h3>
         <Link to="/KitchenPlan" className="text-xs text-muted-foreground/60 hover:text-primary transition-colors">
           Edit plan →

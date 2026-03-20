@@ -40,7 +40,7 @@ export default function Profile() {
   const age = me ? formatAge(me.birthday) || (me.age ? `${me.age} years old` : null) : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">You</h2>
         <p className="text-sm text-muted-foreground/60 italic">{["Come back to yourself.", "A moment just for you.", "Breathe, you're here."][new Date().getDay() % 3]}</p>
@@ -84,9 +84,9 @@ export default function Profile() {
       <div className="space-y-1">
         <p className="text-sm font-medium text-foreground">How are you feeling today?</p>
         {lastCheckIn?.mood ? (
-          <p className="text-xs text-muted-foreground/70">Feeling: <span className="text-primary font-medium">{lastCheckIn.mood}</span></p>
+          <p className="text-xs text-muted-foreground/70">Today feels: <span className="text-primary font-medium">{lastCheckIn.mood}</span></p>
         ) : (
-          <p className="text-xs text-muted-foreground/50 italic">No check-in yet today</p>
+          <p className="text-xs text-muted-foreground/50 italic">No check-in yet</p>
         )}
       </div>
 

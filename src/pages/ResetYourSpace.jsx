@@ -30,7 +30,7 @@ export default function ResetYourSpace() {
               key={item}
               onClick={() => toggle(item)}
               className={`w-full text-left p-5 rounded-2xl border flex items-center gap-4 transition-all duration-300 ${
-                done ? "bg-[#A8B5A2]/20 border-[#A8B5A2]/40 opacity-60" : "bg-card border-border/40 hover:border-primary/20"
+                done ? "bg-[#A8B5A2]/20 border-[#A8B5A2]/40 opacity-40" : "bg-card border-border/40 hover:border-primary/20"
               }`}
             >
               <div className={`h-5 w-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-all duration-300 ${

@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils";
 
 const colorMap = {
-  purple: "bg-primary/15 text-primary",
-  peach: "bg-secondary text-secondary-foreground",
+  purple: "bg-primary/20 text-primary-foreground",
+  peach: "bg-accent/40 text-accent-foreground",
   teal: "bg-accent text-accent-foreground",
-  pink: "bg-pink-100 text-pink-700",
-  amber: "bg-amber-100 text-amber-700",
-  sky: "bg-sky-100 text-sky-700",
-  lime: "bg-lime-100 text-lime-700",
+  pink: "bg-secondary text-secondary-foreground",
+  amber: "bg-accent/60 text-foreground",
+  sky: "bg-primary/10 text-primary-foreground",
+  lime: "bg-muted text-muted-foreground",
 };
 
 export default function KidAvatar({ name, color, size = "md", className }) {

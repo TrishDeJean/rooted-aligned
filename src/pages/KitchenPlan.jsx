@@ -200,6 +200,18 @@ export default function KitchenPlan() {
                     />
                   ))}
                 </div>
+                <div className="space-y-1 pt-1 border-t border-border/30">
+                  <p className="text-[11px] font-semibold text-muted-foreground tracking-wide uppercase flex items-center gap-1">
+                    🛒 Need this week
+                  </p>
+                  <Textarea
+                    value={local[`${key}_groceries`] || ""}
+                    onChange={e => handleChange(`${key}_groceries`, e.target.value)}
+                    placeholder={"One item per line…"}
+                    rows={2}
+                    className="resize-none text-sm bg-background/60 border-border/50 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40 focus:ring-primary/10"
+                  />
+                </div>
               </Card>
             );
           })}

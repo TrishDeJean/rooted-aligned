@@ -2,7 +2,8 @@ import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { Sun, Moon, CloudSun, CheckCircle2, Circle } from "lucide-react";
+import { Sun, Moon, CloudSun, CheckCircle2, Circle, Leaf } from "lucide-react";
+import { isPast } from "date-fns";
 import { Card } from "@/components/ui/card";
 import ScheduleCard from "@/components/schedule/ScheduleCard";
 import AddScheduleDialog from "@/components/schedule/AddScheduleDialog";
@@ -59,6 +60,15 @@ export default function Dashboard() {
     queryKey: ["kids"],
     queryFn: () => base44.entities.Kid.list(),
   });
+
+  const { data: starters = [] } = useQuery({
+    queryKey: ["starters"],
+    queryFn: () => base44.entities.Starter.list(),
+  });
+
+  const startersNeedingCare = starters.filter(s =>
+    s.location !== "in_fridge" && s.next_feed_due && isPast(new Date(s.next_feed_due))
+  );
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, completed }) => base44.entities.ScheduleEntry.update(id, { completed }),

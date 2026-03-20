@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, CalendarDays, Plus, UserCircle, Leaf, CookingPot } from "lucide-react";
+import { LayoutDashboard, Users, CalendarDays, Plus, UserCircle, Leaf, CookingPot, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,6 +9,7 @@ const navItems = [
   { path: "/Dashboard", icon: LayoutDashboard, label: "Today" },
   { path: "/Schedule", icon: CalendarDays, label: "Flow" },
   { path: "/Nourish", icon: Leaf, label: "Nourish" },
+  { path: "/Reset", icon: RotateCcw, label: "Reset" },
   { path: "/KitchenPlan", icon: CookingPot, label: "Kitchen" },
   { path: "/Profile", icon: Users, label: "Your People" },
   { path: "/Account", icon: UserCircle, label: "You" },

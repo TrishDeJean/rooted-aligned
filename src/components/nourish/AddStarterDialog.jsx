@@ -7,7 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
-const empty = { name: "", notes: "" };
+const empty = { name: "", notes: "", variety: "" };
+
+const VARIETIES = [
+  { key: "all_purpose", label: "Unbleached All Purpose", emoji: "🌾" },
+  { key: "half_half", label: "Half & Half", emoji: "⚖️" },
+  { key: "whole_wheat", label: "Whole Wheat", emoji: "🌿" },
+  { key: "chocolate", label: "Chocolate", emoji: "🍫" },
+];
 
 export default function AddStarterDialog({ open, onOpenChange, editStarter, suggestedNames = [] }) {
   const [form, setForm] = useState(empty);
@@ -15,7 +22,7 @@ export default function AddStarterDialog({ open, onOpenChange, editStarter, sugg
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    setForm(editStarter ? { name: editStarter.name, notes: editStarter.notes || "" } : empty);
+    setForm(editStarter ? { name: editStarter.name, notes: editStarter.notes || "", variety: editStarter.variety || "" } : empty);
   }, [editStarter, open]);
 
   const handleSave = async () => {
@@ -61,6 +68,25 @@ export default function AddStarterDialog({ open, onOpenChange, editStarter, sugg
                   className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                 >
                   {n}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <Label>Variety</Label>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {VARIETIES.map(({ key, label, emoji }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setForm({ ...form, variety: form.variety === key ? "" : key })}
+                  className={`text-xs px-3 py-1.5 rounded-xl border transition-all ${
+                    form.variety === key
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-muted text-muted-foreground border-border hover:border-primary/40"
+                  }`}
+                >
+                  {emoji} {label}
                 </button>
               ))}
             </div>

@@ -231,7 +231,7 @@ export default function KitchenPlan() {
                       emoji={emoji}
                       value={local[`${key}_${mKey}`]}
                       onChange={val => handleChange(`${key}_${mKey}`, val)}
-                      onAddIngredient={(item) => handleAddIngredient(label, mLabel, item)}
+                      onAddIngredients={(items) => handleAddIngredients(label, mLabel, items)}
                       isSnacks={mKey === "snacks"}
                     />
                   ))}

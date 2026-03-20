@@ -71,7 +71,7 @@ export default function Layout() {
         className="fixed bottom-0 left-0 right-0 z-40 bg-card/80 backdrop-blur-xl border-t border-border/50 select-none"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
-        <div className="max-w-3xl mx-auto flex items-center justify-around h-16 px-4">
+        <div className="w-full flex items-center justify-between h-16 px-2">
           {navItems.map(({ path, icon: Icon, label }) => {
             const isActive = location.pathname === path ||
               (path === "/Dashboard" && location.pathname === "/");
@@ -80,12 +80,12 @@ export default function Layout() {
                 key={path}
                 to={path}
                 className={cn(
-                  "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition-all active:scale-95",
+                  "flex flex-col items-center gap-0.5 px-1.5 py-1.5 rounded-xl transition-all active:scale-95",
                   isActive ? "text-primary" : "text-foreground/40 hover:text-foreground/70"
                 )}
               >
-                <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5px]")} />
-                <span className="text-[11px] font-medium">{label}</span>
+                <Icon className={cn("h-4 w-4", isActive && "stroke-[2.5px]")} />
+                <span className="text-[10px] font-medium whitespace-nowrap">{label}</span>
               </Link>
             );
           })}

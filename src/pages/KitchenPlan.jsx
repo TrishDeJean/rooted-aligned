@@ -264,15 +264,9 @@ export default function KitchenPlan() {
       <Card className="p-5 space-y-3 bg-accent/5 border-accent/20">
         <div>
           <p className="text-sm font-semibold text-foreground">🪴 Running low</p>
-          <p className="text-xs text-muted-foreground/50 mt-0.5">Quick "don't forget" items — one per line or comma-separated</p>
+          <p className="text-xs text-muted-foreground/50 mt-0.5">Jot down what you're low on — saved items move into your grocery list</p>
         </div>
-        <Textarea
-          value={local.running_low || ""}
-          onChange={e => handleChange("running_low", e.target.value)}
-          placeholder={"butter\neggs\ntoothpaste…"}
-          rows={3}
-          className="resize-none text-sm bg-background/60 border-border/40 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40"
-        />
+        <RunningLowInput local={local} handleChange={handleChange} />
       </Card>
 
       {/* Pantry link */}

@@ -74,7 +74,7 @@ export default function FocusOfDay() {
 
       {/* Top 3 tasks */}
       <div>
-        <p className="text-xs font-semibold text-muted-foreground tracking-wide mb-2">Top 3 today</p>
+        <p className="text-xs font-semibold text-muted-foreground tracking-wide mb-2">What matters most today?</p>
         <Card className="divide-y divide-border/40">
           {tasks.map(({ field, value }, idx) => (
             <div key={field} className="flex items-center gap-3 px-4 py-3">
@@ -95,7 +95,7 @@ export default function FocusOfDay() {
                     if (e.key === "Enter") saveTask(field);
                     if (e.key === "Escape") setEditingTask(null);
                   }}
-                  placeholder={`Priority ${idx + 1}...`}
+                  placeholder={["First focus", "Second focus", "Third focus"][idx]}
                   className="h-7 text-sm border-0 bg-transparent p-0 focus-visible:ring-0 placeholder:text-muted-foreground/40"
                   autoFocus
                 />
@@ -106,7 +106,7 @@ export default function FocusOfDay() {
                 >
                   {value
                     ? <span className="text-foreground">{value}</span>
-                    : <span className="text-muted-foreground/35 italic">Tap to add...</span>
+                    : <span className="text-muted-foreground/35 italic">{["First focus", "Second focus", "Third focus"][idx]}</span>
                   }
                 </button>
               )}

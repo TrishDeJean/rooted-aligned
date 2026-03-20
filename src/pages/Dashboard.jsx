@@ -204,6 +204,21 @@ export default function Dashboard() {
         </Card>
       )}
 
+      {/* Gentle starter nudge */}
+      {startersNeedingCare.length > 0 && (
+        <Card className="p-4 bg-primary/5 border-primary/15 flex items-start gap-3">
+          <Leaf className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-foreground">A gentle reminder 🌿</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {startersNeedingCare.length === 1
+                ? `${startersNeedingCare[0].name} could use a little care when you have a moment.`
+                : `${startersNeedingCare.map(s => s.name).join(", ")} could use some tending when you're ready.`}
+            </p>
+          </div>
+        </Card>
+      )}
+
       {/* Notes & Reminders */}
       <NotesSection />
 

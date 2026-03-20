@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Pencil, Clock, AlertCircle } from "lucide-react";
+import { Pencil, Clock } from "lucide-react";
 import { formatDistanceToNow, isPast, format } from "date-fns";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

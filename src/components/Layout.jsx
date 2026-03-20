@@ -34,7 +34,7 @@ export default function Layout() {
               alt="Rooted & Aligned"
               className="h-8 w-8 rounded-xl object-cover"
             />
-            <h1 className="text-lg font-bold tracking-tight text-foreground">Rooted & Aligned</h1>
+            <h1 className="text-lg font-semibold tracking-tight text-foreground/70">Rooted & Aligned</h1>
           </div>
           <button
             onClick={() => setShowAdd(true)}
@@ -78,7 +78,7 @@ export default function Layout() {
                 to={path}
                 className={cn(
                   "flex flex-col items-center gap-0.5 px-4 py-1.5 rounded-xl transition-all active:scale-95",
-                  isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  isActive ? "text-primary" : "text-foreground/40 hover:text-foreground/70"
                 )}
               >
                 <Icon className={cn("h-5 w-5", isActive && "stroke-[2.5px]")} />

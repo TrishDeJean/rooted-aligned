@@ -15,7 +15,7 @@
        Text:             Deep Brown #4A3F3A
     ─────────────────────────────────────────────────────────── */
 
-    --background: 33 35% 94%;          /* #F6F1EB – main cream */
+    --background: 28 38% 93%;          /* warm peach-cream */
     --foreground: 18 12% 26%;          /* #4A3F3A – deep brown */
 
     --card: 33 30% 97%;                /* just-off-white warm card */
@@ -27,7 +27,7 @@
     --primary: 101 11% 67%;            /* #A8B5A2 – sage green */
     --primary-foreground: 18 12% 22%; /* dark brown on sage */
 
-    --secondary: 30 28% 90%;           /* #EFE6DD – soft beige */
+    --secondary: 25 32% 90%;           /* warm peachy beige */
     --secondary-foreground: 18 12% 35%;
 
     --muted: 30 20% 91%;               /* warm grey-beige */

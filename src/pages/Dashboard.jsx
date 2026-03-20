@@ -84,7 +84,7 @@ export default function Dashboard() {
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <greeting.Icon className={`h-6 w-6 ${greeting.color}`} />
-          <h2 className="text-2xl font-bold tracking-tight">{greeting.text}</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{greeting.text}, Trish 🤍</h2>
         </div>
         <p className="text-muted-foreground">
           {format(new Date(), "EEEE, MMMM d")} · {total} {total === 1 ? "activity" : "activities"} today
@@ -154,7 +154,7 @@ export default function Dashboard() {
 
       {/* Today's Schedule */}
       <div className="space-y-3">
-        <h3 className="text-lg font-bold">Today's Schedule</h3>
+        <h3 className="text-lg font-bold">Today, Aligned</h3>
         {loadingEntries ? (
           <div className="space-y-3">
             {[1, 2, 3].map(i => (

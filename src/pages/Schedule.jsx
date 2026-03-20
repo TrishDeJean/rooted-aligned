@@ -15,16 +15,20 @@ function timeGroup(time) {
   return "evening";
 }
 
+const GROUP_EMOJIS = { morning: "🌤", afternoon: "🌿", evening: "🌙" };
+
 function ScheduleGrouped({ entries, kids, onToggle, onEdit }) {
   const groups = { morning: [], afternoon: [], evening: [] };
   entries.forEach(e => groups[timeGroup(e.start_time)].push(e));
   const labels = { morning: "Morning", afternoon: "Afternoon", evening: "Evening" };
   const completed = entries.filter(e => e.completed).length;
   const total = entries.length;
+  const [collapsed, setCollapsed] = useState({});
+
+  const toggle = (g) => setCollapsed(prev => ({ ...prev, [g]: !prev[g] }));
 
   return (
     <div className="space-y-4">
-      {/* Soft progress bar */}
       {total > 0 && (
         <div className="h-1 bg-muted rounded-full overflow-hidden">
           <div
@@ -35,10 +39,21 @@ function ScheduleGrouped({ entries, kids, onToggle, onEdit }) {
       )}
       {["morning", "afternoon", "evening"].map(group => {
         if (!groups[group].length) return null;
+        const isCollapsed = collapsed[group];
+        const doneInGroup = groups[group].filter(e => e.completed).length;
+        const totalInGroup = groups[group].length;
         return (
           <div key={group} className="space-y-2">
-            <p className="text-[11px] font-semibold text-muted-foreground/50 tracking-widest uppercase">{labels[group]}</p>
-            {groups[group].map(entry => (
+            <button
+              onClick={() => toggle(group)}
+              className="flex items-center gap-2 w-full text-left"
+            >
+              <span className="text-sm">{GROUP_EMOJIS[group]}</span>
+              <p className="text-[11px] font-semibold text-muted-foreground/60 tracking-widest uppercase flex-1">{labels[group]}</p>
+              <span className="text-[10px] text-muted-foreground/40">{doneInGroup}/{totalInGroup}</span>
+              <span className={`text-muted-foreground/30 transition-transform text-xs ${isCollapsed ? "" : "rotate-180"}`}>▲</span>
+            </button>
+            {!isCollapsed && groups[group].map(entry => (
               <ScheduleCard
                 key={entry.id}
                 entry={entry}

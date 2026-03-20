@@ -80,14 +80,15 @@ export default function Profile() {
         </Card>
       )}
 
-      {/* How are you feeling */}
-      <div className="space-y-1">
-        <p className="text-sm font-medium text-foreground">How are you feeling today?</p>
+      {/* How does today feel */}
+      <div className="space-y-2">
+        <p className="text-sm font-medium text-foreground">How does today feel?</p>
         {lastCheckIn?.mood ? (
           <p className="text-xs text-muted-foreground/70">Today feels: <span className="text-primary font-medium">{lastCheckIn.mood}</span></p>
         ) : (
           <p className="text-xs text-muted-foreground/50 italic">No check-in yet</p>
         )}
+        <TodaysIntention />
       </div>
 
       {/* Gentle moments */}

@@ -35,9 +35,12 @@ export default function StarterCard({ starter, onEdit }) {
     <Card className={`p-4 space-y-3 ${isDue && !isInFridge ? "border-accent/60 bg-accent/5" : ""}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h3 className="font-semibold text-foreground">{starter.name}</h3>
-            {isDue && !isInFridge && <AlertCircle className="h-4 w-4 text-accent" />}
+            <span className={`inline-flex items-center gap-1.5 text-[11px] px-2 py-0.5 rounded-full border font-medium ${statusConfig.color}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${statusConfig.dot}`} />
+              {statusConfig.label}
+            </span>
           </div>
           {starter.last_fed && (
             <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">

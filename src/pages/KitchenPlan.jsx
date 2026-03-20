@@ -139,10 +139,10 @@ export default function KitchenPlan() {
     debouncedSave(updated);
   };
 
-  const handleAddIngredient = (dayLabel, mealLabel, item) => {
-    const line = `${item} — for ${mealLabel} (${dayLabel})`;
+  const handleAddIngredients = (dayLabel, mealLabel, items) => {
+    const lines = items.map(item => `${item} — for ${mealLabel} (${dayLabel})`).join("\n");
     const existing = local.week_groceries || "";
-    const updated = existing ? `${existing}\n${line}` : line;
+    const updated = existing ? `${existing}\n${lines}` : lines;
     handleChange("week_groceries", updated);
   };
 

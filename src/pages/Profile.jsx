@@ -80,6 +80,16 @@ export default function Profile() {
         </Card>
       )}
 
+      {/* How are you feeling */}
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-foreground">How are you feeling today?</p>
+        {lastCheckIn?.mood ? (
+          <p className="text-xs text-muted-foreground/70">Feeling: <span className="text-primary font-medium">{lastCheckIn.mood}</span></p>
+        ) : (
+          <p className="text-xs text-muted-foreground/50 italic">No check-in yet today</p>
+        )}
+      </div>
+
       {/* Gentle moments */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">A moment for you</h3>
@@ -99,9 +109,9 @@ export default function Profile() {
         </Card>
       </div>
 
-      {/* Account Actions */}
+      {/* Settings */}
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">Your Space</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">Settings</h3>
         <Card className="divide-y divide-border/50">
           <button
             onClick={handleLogout}

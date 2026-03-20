@@ -115,10 +115,10 @@ export default function Dashboard() {
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Work</h3>
               <div className="flex gap-3">
                 {workKids.map(kid => (
-                  <div key={kid.id} className="flex flex-col items-center gap-1">
+                  <button key={kid.id} className="flex flex-col items-center gap-1" onClick={() => setSelectedKid(kid)}>
                     <KidAvatar name={kid.name} color={kid.avatar_color} size="md" />
                     <span className="text-xs font-medium text-foreground">{kid.name.split(" ")[0]}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

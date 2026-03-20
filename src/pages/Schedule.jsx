@@ -31,10 +31,18 @@ export default function Schedule() {
     return d.getDay() === dayOfWeek && e.date !== dateStr;
   });
 
+  const seen = new Set();
   const entries = [
     ...entriesForDate,
     ...recurringForDay.filter(r => !entriesForDate.some(e => e.id === r.id))
-  ].sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""));
+  ]
+    .sort((a, b) => (a.start_time || "").localeCompare(b.start_time || ""))
+    .filter(e => {
+      const key = `${e.title}-${e.start_time}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
 
   const { data: kids = [] } = useQuery({
     queryKey: ["kids"],

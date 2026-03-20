@@ -11,6 +11,8 @@ import KidAvatar from "@/components/kids/KidAvatar";
 import PullToRefresh from "@/components/PullToRefresh";
 import KidScheduleDrawer from "@/components/kids/KidScheduleDrawer";
 import NotesSection from "@/components/notes/NotesSection";
+import FocusOfDay from "@/components/dashboard/FocusOfDay";
+import OnYourMind from "@/components/dashboard/OnYourMind";
 
 function getGreeting() {
   const hour = new Date().getHours();

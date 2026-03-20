@@ -201,6 +201,7 @@ export default function Dashboard() {
           <div className="space-y-2">
             {entries
               .filter(entry => !entry.kids?.length || entry.kids.some(id => presentKidIds.includes(id)))
+              .filter((_, i) => !isLowEnergy || i < 3)
               .map(entry => (
                 <ScheduleCard
                   key={entry.id}

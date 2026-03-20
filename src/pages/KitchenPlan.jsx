@@ -4,8 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, startOfWeek, addDays } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { ChevronLeft, ChevronRight, ShoppingBag, Plus, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingBag, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const DAYS = [

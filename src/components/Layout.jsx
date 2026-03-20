@@ -29,9 +29,11 @@ export default function Layout() {
       <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-xl border-b border-border/50">
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between select-none">
           <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground text-sm font-bold">R</span>
-            </div>
+            <img
+              src="https://media.base44.com/images/public/69bb73cfd8e97b1ddec8682e/458875f10_ChatGPTImageMar19202607_12_08PM.png"
+              alt="Rooted & Aligned"
+              className="h-8 w-8 rounded-xl object-cover"
+            />
             <h1 className="text-lg font-bold tracking-tight text-foreground">Rooted & Aligned</h1>
           </div>
           <button

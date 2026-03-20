@@ -37,15 +37,18 @@ function useDebounce(fn, delay = 900) {
   };
 }
 
-function MealField({ label, emoji, value, onChange, onAddIngredient, isSnacks }) {
-  const [adding, setAdding] = useState(false);
-  const [ingredient, setIngredient] = useState("");
+function MealField({ label, emoji, value, onChange, onAddIngredients, isSnacks }) {
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState("");
 
-  const handleAdd = () => {
-    if (!ingredient.trim()) { setAdding(false); return; }
-    onAddIngredient(ingredient.trim());
-    setIngredient("");
-    setAdding(false);
+  const handleSave = () => {
+    const lines = draft
+      .split(/[\n,]+/)
+      .map(l => l.trim())
+      .filter(Boolean);
+    if (lines.length) onAddIngredients(lines);
+    setDraft("");
+    setOpen(false);
   };
 
   return (
@@ -55,7 +58,7 @@ function MealField({ label, emoji, value, onChange, onAddIngredient, isSnacks })
           <span>{emoji}</span> {label}
         </p>
         <button
-          onClick={() => setAdding(v => !v)}
+          onClick={() => setOpen(v => !v)}
           className="text-[10px] text-muted-foreground/40 hover:text-primary transition-colors flex items-center gap-0.5"
         >
           <Plus className="h-2.5 w-2.5" /> add to list
@@ -68,20 +71,26 @@ function MealField({ label, emoji, value, onChange, onAddIngredient, isSnacks })
         rows={2}
         className="resize-none text-sm bg-background/60 border-border/50 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40 focus:ring-primary/10"
       />
-      {adding && (
-        <div className="flex gap-2 items-center">
-          <Input
-            value={ingredient}
-            onChange={e => setIngredient(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter") handleAdd(); if (e.key === "Escape") setAdding(false); }}
-            placeholder="Add an ingredient…"
-            className="text-sm h-8 rounded-xl border-border/50 flex-1"
+      {open && (
+        <div className="rounded-xl border border-border/50 bg-background/80 p-3 space-y-2 shadow-sm">
+          <p className="text-[10px] text-muted-foreground/50 italic">One item per line, or separate by commas</p>
+          <Textarea
+            value={draft}
+            onChange={e => setDraft(e.target.value)}
+            placeholder={"milk\neggs\ncheese…"}
+            rows={4}
             autoFocus
+            className="resize-none text-sm bg-background/60 border-border/40 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40"
           />
-          <button onClick={handleAdd} className="text-xs text-primary font-medium hover:text-primary/80 shrink-0 px-1">Add</button>
-          <button onClick={() => setAdding(false)} className="text-muted-foreground hover:text-foreground shrink-0">
-            <X className="h-3.5 w-3.5" />
-          </button>
+          <div className="flex items-center justify-between">
+            <button onClick={() => { setDraft(""); setOpen(false); }} className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors">cancel</button>
+            <button
+              onClick={handleSave}
+              className="text-xs font-medium text-primary-foreground bg-primary/80 hover:bg-primary rounded-lg px-4 py-1.5 transition-colors"
+            >
+              Done
+            </button>
+          </div>
         </div>
       )}
     </div>

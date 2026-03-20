@@ -18,7 +18,7 @@ export default function Layout() {
 
   return (
     <div
-      className="min-h-screen bg-background flex flex-col"
+      className="h-[100dvh] bg-background flex flex-col overflow-hidden"
       style={{
         paddingTop: "env(safe-area-inset-top)",
         paddingLeft: "env(safe-area-inset-left)",

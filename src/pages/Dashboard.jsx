@@ -122,8 +122,8 @@ export default function Dashboard() {
       {total > 0 && (
         <Card className="p-4 bg-gradient-to-br from-primary/5 to-accent/10 border-primary/10">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-foreground">Today, so far</span>
-            <span className="text-sm font-bold text-primary">{completed}/{total}</span>
+            <span className="text-sm font-medium text-foreground">So far, today</span>
+            <span className="text-sm font-bold text-primary">{completed} of {total} complete</span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <div
@@ -188,7 +188,7 @@ export default function Dashboard() {
 
       {/* Today's Schedule */}
       <div className="space-y-3">
-        <h3 className="text-lg font-bold">{isLowEnergy ? "Just the essentials" : "Today, Aligned"}</h3>
+        <h3 className="text-lg font-bold">{isLowEnergy ? "Just the essentials" : "Your day, aligned"}</h3>
         {loadingEntries ? (
           <div className="space-y-3">
             {[1, 2, 3].map(i => (

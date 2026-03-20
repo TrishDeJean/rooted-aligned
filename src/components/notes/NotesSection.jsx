@@ -52,7 +52,7 @@ export default function NotesSection() {
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold flex items-center gap-2">
           <StickyNote className="h-5 w-5 text-accent" />
-          Notes for later
+          Hold for later
         </h3>
         <Button variant="ghost" size="sm" onClick={() => setAdding(v => !v)}>
           <Plus className="h-4 w-4 mr-1" /> Add

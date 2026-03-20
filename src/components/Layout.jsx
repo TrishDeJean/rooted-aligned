@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, CalendarDays, Plus, UserCircle, Leaf, UtensilsCrossed } from "lucide-react";
+import { LayoutDashboard, Users, CalendarDays, Plus, UserCircle, Leaf, CookingPot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";

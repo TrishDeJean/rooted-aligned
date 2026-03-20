@@ -71,8 +71,8 @@ const COMPLETION_MESSAGES = [
 
 const STARTER_MESSAGES = [
   "Your starters are cared for 🤍",
-  "Fed and ready 🍞",
-  "Nourished and loved 🤍",
+  "Your kitchen is alive and well 🤍",
+  "Everything is resting as it should 🤍",
 ];
 
 const CLOSING_MESSAGES = [
@@ -345,6 +345,19 @@ export default function Reset() {
     setShowConfirm(false);
   };
 
+  // Calculate overall progress
+  const totalRequired = sections.reduce((acc, section) => {
+    const required = section.tasks.filter(t => !t.includes("(optional)")).length;
+    return acc + required;
+  }, 0);
+
+  const totalCompleted = Object.values(sectionStates).reduce((acc, sectionTasks) => {
+    return acc + Object.values(sectionTasks).filter(Boolean).length;
+  }, 0);
+
+  const progressPercent = totalRequired > 0 ? totalCompleted / totalRequired : 0;
+  const buttonOpacity = Math.min(0.4 + progressPercent * 0.6, 1);
+
   return (
     <div className="space-y-6 pb-12">
       {/* Header with Day */}
@@ -372,13 +385,15 @@ export default function Reset() {
             />
           ))}
 
-          {/* Completion Button */}
-          <button
+          {/* Completion Button with progressive visibility */}
+          <motion.button
             onClick={() => setCompleted(true)}
+            animate={{ opacity: buttonOpacity }}
+            transition={{ duration: 0.5 }}
             className="w-full py-3 rounded-xl border border-primary/30 bg-primary/5 text-primary font-medium text-sm hover:bg-primary/10 transition-colors mt-6"
           >
             This is enough 🤍
-          </button>
+          </motion.button>
         </motion.div>
       ) : (
         <motion.div
@@ -447,6 +462,18 @@ export default function Reset() {
               {closingDisplay}
             </p>
           </Card>
+
+          {/* "See you tomorrow" message (occasional) */}
+          {Math.random() > 0.3 && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="text-xs text-muted-foreground/40 text-center italic pt-2"
+            >
+              See you tomorrow
+            </motion.p>
+          )}
 
           {/* Reset Button */}
           <button

@@ -25,6 +25,12 @@ export default function StarterCard({ starter, onEdit }) {
   const isDue = starter.next_feed_due && isPast(new Date(starter.next_feed_due));
   const isInFridge = starter.location === "in_fridge";
 
+  const statusConfig = isInFridge
+    ? { label: "In the fridge", color: "bg-muted/60 text-muted-foreground border-border", dot: "bg-muted-foreground/40" }
+    : isDue
+    ? { label: "Needs feeding", color: "bg-accent/15 text-accent border-accent/30", dot: "bg-accent animate-pulse" }
+    : { label: "On the counter", color: "bg-primary/10 text-primary border-primary/20", dot: "bg-primary" };
+
   return (
     <Card className={`p-4 space-y-3 ${isDue && !isInFridge ? "border-accent/60 bg-accent/5" : ""}`}>
       <div className="flex items-start justify-between">

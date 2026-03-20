@@ -183,6 +183,9 @@ export default function Dashboard() {
       {/* On Your Mind */}
       <OnYourMind />
 
+      {/* Meals Today */}
+      <MealsToday />
+
       {/* Today's Schedule */}
       <div className="space-y-3">
         <h3 className="text-lg font-bold">{isLowEnergy ? "Just the essentials" : "Today, Aligned"}</h3>

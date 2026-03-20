@@ -179,9 +179,12 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* On Your Mind */}
+      <OnYourMind />
+
       {/* Today's Schedule */}
       <div className="space-y-3">
-        <h3 className="text-lg font-bold">Today, Aligned</h3>
+        <h3 className="text-lg font-bold">{isLowEnergy ? "Just the essentials" : "Today, Aligned"}</h3>
         {loadingEntries ? (
           <div className="space-y-3">
             {[1, 2, 3].map(i => (

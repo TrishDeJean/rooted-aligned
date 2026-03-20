@@ -24,8 +24,9 @@ export default function MealsToday() {
   const breakfast = plan?.[`${dayKey}_breakfast`];
   const lunch = plan?.[`${dayKey}_lunch`];
   const dinner = plan?.[`${dayKey}_dinner`];
+  const snacks = plan?.[`${dayKey}_snacks`];
 
-  const hasMeals = breakfast || lunch || dinner;
+  const hasMeals = breakfast || lunch || dinner || snacks;
 
   if (!hasMeals) return null;
 

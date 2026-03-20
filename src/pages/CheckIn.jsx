@@ -1,10 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
+import { useMutation } from "@tanstack/react-query";
 
 const MOODS = ["Calm", "Tired", "Overwhelmed", "Good", "Scattered"];
 
 export default function CheckIn() {
   const [mood, setMood] = useState(null);
   const [note, setNote] = useState("");
+  const [saved, setSaved] = useState(false);
+  const navigate = useNavigate();
+
+  const saveMutation = useMutation({
+    mutationFn: (data) => base44.entities.CheckInLog.create(data),
+    onSuccess: () => setSaved(true),
+  });
+
+  const handleMood = (m) => {
+    const next = mood === m ? null : m;
+    setMood(next);
+    setSaved(false);
+    if (next) {
+      saveMutation.mutate({ mood: next, note, checked_at: new Date().toISOString() });
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col px-5 pt-10 pb-16 space-y-8">
@@ -17,10 +36,10 @@ export default function CheckIn() {
         {MOODS.map(m => (
           <button
             key={m}
-            onClick={() => setMood(mood === m ? null : m)}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium border transition-all ${
+            onClick={() => handleMood(m)}
+            className={`px-5 py-2.5 rounded-full text-sm font-semibold border transition-all duration-200 ${
               mood === m
-                ? "bg-primary text-primary-foreground border-primary"
+                ? "bg-[#A8B5A2] text-[#2d3a2d] border-[#A8B5A2] shadow-sm"
                 : "bg-card border-border/40 text-foreground hover:border-primary/30"
             }`}
           >
@@ -39,9 +58,17 @@ export default function CheckIn() {
         />
       </div>
 
-      <p className="text-xs text-muted-foreground/50 italic text-center mt-auto pt-8">
-        Whatever you're feeling is okay.
-      </p>
+      <div className="mt-auto pt-4 flex flex-col items-center gap-4">
+        <p className="text-xs text-muted-foreground/50 italic text-center">
+          Whatever you're feeling is okay.
+        </p>
+        <button
+          onClick={() => navigate("/Account")}
+          className="text-sm text-muted-foreground/60 hover:text-foreground transition-colors underline-offset-2 hover:underline"
+        >
+          I'm ready to go back
+        </button>
+      </div>
     </div>
   );
 }

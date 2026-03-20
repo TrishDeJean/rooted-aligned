@@ -74,24 +74,48 @@ export default function Profile() {
         </Card>
       )}
 
+      {/* Gentle moments */}
+      <div className="space-y-3">
+        <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">A moment for you</h3>
+        <Card className="divide-y divide-border/50">
+          <Link to="/TakeAMoment" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-t-xl">
+            <Wind className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium">Take a moment</span>
+          </Link>
+          <Link to="/CheckIn" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors">
+            <Heart className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium">Check in with yourself</span>
+          </Link>
+          <Link to="/ResetYourSpace" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-b-xl">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium">Reset your space</span>
+          </Link>
+        </Card>
+      </div>
+
       {/* Account Actions */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">Your Space</h3>
-
         <Card className="divide-y divide-border/50">
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-t-xl"
           >
             <LogOut className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Step Away</span>
+            <div>
+              <span className="text-sm font-medium block">Step Away</span>
+              <span className="text-xs text-muted-foreground/60">Logout</span>
+            </div>
           </button>
           <button
             onClick={() => { setShowDeleteConfirm(true); setDeleteStep(1); }}
             className="w-full flex items-center gap-3 p-4 text-left hover:bg-destructive/5 transition-colors rounded-b-xl"
           >
             <Trash2 className="h-4 w-4 text-destructive" />
-            <span className="text-sm font-medium text-destructive">Start Fresh</span>
+            <div>
+              <span className="text-sm font-medium text-destructive block">Start Fresh</span>
+              <span className="text-xs text-muted-foreground/60">Delete Account</span>
+            </div>
           </button>
         </Card>
       </div>

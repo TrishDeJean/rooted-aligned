@@ -49,6 +49,9 @@ const AuthenticatedApp = () => {
         <Route path="/Profile" element={<Kids />} />
         <Route path="/Account" element={<Profile />} />
         <Route path="/Nourish" element={<Nourish />} />
+        <Route path="/TakeAMoment" element={<TakeAMoment />} />
+        <Route path="/CheckIn" element={<CheckIn />} />
+        <Route path="/ResetYourSpace" element={<ResetYourSpace />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

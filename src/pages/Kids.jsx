@@ -32,7 +32,7 @@ export default function Kids() {
 
   const KidSection = ({ title, list }) => list.length === 0 ? null : (
     <div>
-      <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+      <h3 className="text-xs font-semibold text-muted-foreground tracking-wide mb-3">
         {title} ({list.length})
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -46,9 +46,9 @@ export default function Kids() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Profiles</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Your People</h2>
         <Button onClick={handleAdd} size="sm">
-          <Plus className="h-4 w-4 mr-1" /> Add Profile
+          <Plus className="h-4 w-4 mr-1" /> Add Someone
         </Button>
       </div>
 
@@ -65,7 +65,7 @@ export default function Kids() {
         </Card>
       ) : (
         <div className="space-y-5">
-          <KidSection title="Me / Adults" list={adults} />
+          <KidSection title="You" list={adults} />
           <KidSection title="Work" list={workKids} />
           <KidSection title="Home" list={homeBoys} />
           {nieces.length > 0 && (

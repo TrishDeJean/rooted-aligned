@@ -34,7 +34,7 @@ export default function Profile() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold tracking-tight">My Profile</h2>
+      <h2 className="text-2xl font-bold tracking-tight">You</h2>
 
       {isLoading ? (
         <Card className="h-32 animate-pulse bg-muted/50" />
@@ -72,7 +72,7 @@ export default function Profile() {
 
       {/* Account Actions */}
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Account</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">Your Space</h3>
 
         <Card className="divide-y divide-border/50">
           <button
@@ -80,14 +80,14 @@ export default function Profile() {
             className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-t-xl"
           >
             <LogOut className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Sign Out</span>
+            <span className="text-sm font-medium">Step Away</span>
           </button>
           <button
             onClick={() => { setShowDeleteConfirm(true); setDeleteStep(1); }}
             className="w-full flex items-center gap-3 p-4 text-left hover:bg-destructive/5 transition-colors rounded-b-xl"
           >
             <Trash2 className="h-4 w-4 text-destructive" />
-            <span className="text-sm font-medium text-destructive">Delete Account</span>
+            <span className="text-sm font-medium text-destructive">Clear Your Space</span>
           </button>
         </Card>
       </div>

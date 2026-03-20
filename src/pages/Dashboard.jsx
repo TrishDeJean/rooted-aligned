@@ -87,15 +87,16 @@ export default function Dashboard() {
           <h2 className="text-2xl font-bold tracking-tight">{greeting.text}, Trish 🤍</h2>
         </div>
         <p className="text-muted-foreground">
-          {format(new Date(), "EEEE, MMMM d")} · {total} {total === 1 ? "activity" : "activities"} today
+          {format(new Date(), "EEEE, MMMM d")} · {total} gentle {total === 1 ? "plan" : "plans"} for today
         </p>
+        <p className="text-sm text-muted-foreground/70 italic">You're doing enough today.</p>
       </div>
 
       {/* Progress Card */}
       {total > 0 && (
         <Card className="p-4 bg-gradient-to-br from-primary/5 to-accent/10 border-primary/10">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-foreground">Today's Progress</span>
+            <span className="text-sm font-medium text-foreground">Today, so far</span>
             <span className="text-sm font-bold text-primary">{completed}/{total}</span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
@@ -110,9 +111,10 @@ export default function Dashboard() {
       {/* Kids Quick View */}
       {kids.length > 0 && (
         <div className="space-y-3">
+          <h3 className="text-xs font-semibold text-muted-foreground tracking-wide mb-1">With you today</h3>
           {workKids.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Work</h3>
+              <p className="text-[11px] text-muted-foreground/60 mb-1.5">Work</p>
               <div className="flex gap-3">
                 {workKids.map(kid => (
                   <button key={kid.id} className="flex flex-col items-center gap-1" onClick={() => setSelectedKid(kid)}>
@@ -125,7 +127,7 @@ export default function Dashboard() {
           )}
           {homeBoys.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Home</h3>
+              <p className="text-[11px] text-muted-foreground/60 mb-1.5">Home</p>
               <div className="flex gap-3 flex-wrap">
                 {homeBoys.map(kid => (
                   <button key={kid.id} className="flex flex-col items-center gap-1" onClick={() => setSelectedKid(kid)}>
@@ -138,7 +140,7 @@ export default function Dashboard() {
           )}
           {nieces.length > 0 && (
             <div>
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Nieces</h3>
+              <p className="text-[11px] text-muted-foreground/60 mb-1.5">Nieces</p>
               <div className="flex gap-3 flex-wrap">
                 {nieces.map(kid => (
                   <button key={kid.id} className="flex flex-col items-center gap-1" onClick={() => setSelectedKid(kid)}>

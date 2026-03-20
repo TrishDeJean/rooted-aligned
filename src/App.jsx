@@ -17,6 +17,7 @@ import ResetYourSpace from './pages/ResetYourSpace';
 import KitchenPlan from './pages/KitchenPlan';
 import KitchenList from './pages/KitchenList';
 import Pantry from './pages/Pantry';
+import SundayReset from './pages/SundayReset';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {
@@ -58,6 +59,7 @@ const AuthenticatedApp = () => {
         <Route path="/KitchenPlan" element={<KitchenPlan />} />
         <Route path="/KitchenList" element={<KitchenList />} />
         <Route path="/Pantry" element={<Pantry />} />
+        <Route path="/SundayReset" element={<SundayReset />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -114,6 +114,9 @@ export default function Dashboard() {
         <p className="text-sm text-muted-foreground/70 italic">{["Move gently today.", "One thing at a time.", "You're right where you need to be."][new Date().getDay() % 3]}</p>
       </div>
 
+      {/* Focus of Day + Top 3 */}
+      <FocusOfDay />
+
       {/* Progress Card */}
       {total > 0 && (
         <Card className="p-4 bg-gradient-to-br from-primary/5 to-accent/10 border-primary/10">

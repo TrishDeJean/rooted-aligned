@@ -35,7 +35,7 @@ export default function ScheduleCard({ entry, kids, onToggleComplete, onEdit }) 
               onToggleComplete?.(entry.id, checked);
             }}
             onClick={(e) => e.stopPropagation()}
-            className="h-5 w-5 rounded-md border-2"
+            className="h-5 w-5 rounded-full border-2 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
           />
         </div>
         <div className="flex-1 min-w-0">

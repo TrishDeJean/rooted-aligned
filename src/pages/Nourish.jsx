@@ -66,7 +66,7 @@ export default function Nourish() {
   const tabs = [
     { key: "starters", label: "Starters", icon: Leaf },
     { key: "bake", label: "Bake Flow", icon: ChefHat },
-    { key: "log", label: "Quick Log", icon: Zap },
+    { key: "log", label: "Kitchen Notes", icon: Zap },
   ];
 
   return (
@@ -74,7 +74,7 @@ export default function Nourish() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Nourish</h2>
-          <p className="text-sm text-muted-foreground/70 italic">your starters, your rhythm</p>
+          <p className="text-sm text-muted-foreground/70 italic">{["A little care goes a long way.", "Tend to what grows.", "Slow and steady."][new Date().getDay() % 3]}</p>
         </div>
         {activeTab === "starters" && (
           <Button size="sm" onClick={() => { setEditStarter(null); setShowAddStarter(true); }}>
@@ -119,7 +119,7 @@ export default function Nourish() {
                   onClick={() => feedAllMutation.mutate()}
                   disabled={feedAllMutation.isPending}
                 >
-                  🌾 {feedAllMutation.isPending ? "Feeding..." : "Feed All Starters"}
+                  🌾 {feedAllMutation.isPending ? "Caring..." : "Care for all starters"}
                 </Button>
               )}
               {VARIETIES.map(({ key, label, emoji }) => {
@@ -130,7 +130,7 @@ export default function Nourish() {
                 return (
                   <div key={key} className="space-y-2">
                     <h3 className="text-xs font-semibold text-muted-foreground tracking-wide">
-                      {emoji} {label} ({list.length})
+                      {emoji} {label} — {list.length} {list.length === 1 ? "starter" : "starters"}
                     </h3>
                     {list.map(starter => (
                       <StarterCard

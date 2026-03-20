@@ -89,7 +89,7 @@ export default function Dashboard() {
         <p className="text-muted-foreground">
           {format(new Date(), "EEEE, MMMM d")} · {total} gentle {total === 1 ? "plan" : "plans"} for today
         </p>
-        <p className="text-sm text-muted-foreground/70 italic">You're doing enough today.</p>
+        <p className="text-sm text-muted-foreground/70 italic">{["Move gently today.", "One thing at a time.", "You're right where you need to be."][new Date().getDay() % 3]}</p>
       </div>
 
       {/* Progress Card */}
@@ -111,7 +111,7 @@ export default function Dashboard() {
       {/* Kids Quick View */}
       {kids.length > 0 && (
         <div className="space-y-3">
-          <h3 className="text-xs font-semibold text-muted-foreground tracking-wide mb-1">With you today</h3>
+          <h3 className="text-xs font-semibold text-muted-foreground tracking-wide mb-3">With you today</h3>
           {workKids.length > 0 && (
             <div>
               <p className="text-[11px] text-muted-foreground/60 mb-1.5">Work</p>

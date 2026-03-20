@@ -41,7 +41,7 @@ export default function KidCard({ kid, onClick, onTogglePresence }) {
               : "bg-muted text-muted-foreground border-border"
           )}
         >
-          {kid.is_present !== false ? "Here" : "Away"}
+          {kid.is_present !== false ? "Here with me" : "Not here"}
         </button>
       </div>
       {kid.notes && (

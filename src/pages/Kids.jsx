@@ -46,9 +46,12 @@ export default function Kids() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Your People</h2>
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Your People</h2>
+          <p className="text-sm text-muted-foreground/70 italic">Your world, at a glance</p>
+        </div>
         <Button onClick={handleAdd} size="sm">
-          <Plus className="h-4 w-4 mr-1" /> Add Someone
+          <Plus className="h-4 w-4 mr-1" /> Add to your circle
         </Button>
       </div>
 

@@ -69,7 +69,10 @@ export default function Schedule() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight">Your Flow</h2>
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Your Flow</h2>
+          <p className="text-sm text-muted-foreground/70 italic">Move gently through today.</p>
+        </div>
         {!isToday && (
           <Button variant="ghost" size="sm" onClick={() => setSelectedDate(new Date())}>
             <CalendarDays className="h-4 w-4 mr-1" />

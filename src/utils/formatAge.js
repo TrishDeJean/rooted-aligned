@@ -19,8 +19,8 @@ export function formatAge(birthday) {
   const y = years > 0 ? `${years} year${years !== 1 ? "s" : ""}` : "";
   const m = months > 0 ? `${months} month${months !== 1 ? "s" : ""}` : "";
 
-  if (y && m) return `${y} and ${m} old`;
-  if (y) return `${y} old`;
-  if (m) return `${m} old`;
+  if (y && m) return `${years}y ${months}mo`;
+  if (y) return `${years}y`;
+  if (m) return `${months}mo`;
   return "newborn";
 }

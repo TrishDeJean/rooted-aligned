@@ -7,9 +7,13 @@ import { CheckCircle2, Circle } from "lucide-react";
 
 const STEPS = [
   { key: "dough_started", label: "Dough Started", emoji: "🌿", description: "Autolyse or mix your dough" },
-  { key: "stretch_folds", label: "Stretch & Folds", emoji: "🤲", description: "4 sets, 30 min apart" },
+  { key: "stretch_fold_1", label: "Stretch & Fold 1", emoji: "🤲", description: "Gentle folds, 30 min after mix" },
+  { key: "stretch_fold_2", label: "Stretch & Fold 2", emoji: "🤲", description: "30 min later" },
+  { key: "stretch_fold_3", label: "Stretch & Fold 3", emoji: "🤲", description: "30 min later" },
+  { key: "stretch_fold_4", label: "Stretch & Fold 4", emoji: "🤲", description: "30 min later" },
   { key: "bulk_ferment", label: "Bulk Ferment", emoji: "⏳", description: "Until doubled & bubbly" },
-  { key: "bake_time", label: "Bake Time", emoji: "🔥", description: "Into the oven it goes" },
+  { key: "shape", label: "Shape", emoji: "🫳", description: "Pre-shape, bench rest, final shape" },
+  { key: "bake_time", label: "Bake", emoji: "🔥", description: "Into the oven it goes" },
 ];
 
 export default function BakeFlow() {
@@ -38,24 +42,25 @@ export default function BakeFlow() {
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted-foreground/70 italic">Track your bake from start to finish</p>
+      <p className="text-sm text-muted-foreground/70 italic">{["Slow and steady.", "Trust the process.", "Good bread takes time."][new Date().getDay() % 3]}</p>
       {STEPS.map(({ key, label, emoji, description }) => {
         const done = completed.includes(key);
         return (
           <Card
             key={key}
             className={`p-4 flex items-center gap-3 cursor-pointer transition-all active:scale-[0.98] ${
-              done ? "bg-primary/5 border-primary/30" : "hover:border-border"
+              done ? "bg-primary/10 border-primary/30" : "hover:border-border"
             }`}
             onClick={() => toggle(key)}
           >
-            {done
-              ? <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
-              : <Circle className="h-5 w-5 text-muted-foreground shrink-0" />
-            }
+            <div className={`h-5 w-5 rounded-full shrink-0 flex items-center justify-center border-2 transition-all ${
+              done ? "bg-primary border-primary" : "border-muted-foreground/30"
+            }`}>
+              {done && <div className="h-2 w-2 rounded-full bg-primary-foreground" />}
+            </div>
             <div className="flex-1">
               <p className={`font-medium text-sm ${done ? "line-through text-muted-foreground" : ""}`}>
-                {emoji} {label}
+                <span className="opacity-60">{emoji}</span> {label}
               </p>
               <p className="text-xs text-muted-foreground">{description}</p>
             </div>

@@ -11,6 +11,9 @@ import Schedule from './pages/Schedule';
 import Kids from './pages/Kids';
 import Profile from './pages/Profile';
 import Nourish from './pages/Nourish';
+import TakeAMoment from './pages/TakeAMoment';
+import CheckIn from './pages/CheckIn';
+import ResetYourSpace from './pages/ResetYourSpace';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {

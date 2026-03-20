@@ -114,9 +114,18 @@ export default function KitchenPlan() {
   return (
     <div className="space-y-8 pb-6">
       {/* Header */}
-      <div className="space-y-1">
-        <h2 className="text-2xl font-bold tracking-tight">Kitchen Plan 🍞</h2>
-        <p className="text-sm text-muted-foreground italic">A gentle plan for the week</p>
+      <div className="flex items-start justify-between">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-bold tracking-tight">Kitchen Plan 🍞</h2>
+          <p className="text-sm text-muted-foreground italic">A gentle plan for the week</p>
+        </div>
+        <Link
+          to="/KitchenList"
+          className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-primary transition-colors border border-border/60 rounded-xl px-3 py-1.5"
+        >
+          <ShoppingBag className="h-3.5 w-3.5" />
+          Kitchen List
+        </Link>
       </div>
 
       {/* Week navigation */}

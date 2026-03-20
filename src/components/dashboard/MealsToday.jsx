@@ -51,6 +51,9 @@ export default function MealsToday() {
         {dinner && (
           <MealRow emoji="🌙" label="Dinner" value={dinner} />
         )}
+        {snacks && (
+          <MealRow emoji="🍎" label="Snacks" value={snacks} />
+        )}
       </Card>
     </div>
   );

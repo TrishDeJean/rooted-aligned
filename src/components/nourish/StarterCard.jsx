@@ -67,13 +67,9 @@ export default function StarterCard({ starter, onEdit }) {
         <button
           onClick={() => locationMutation.mutate(isInFridge ? "on_counter" : "in_fridge")}
           disabled={locationMutation.isPending}
-          className={`flex-1 text-xs py-1.5 rounded-xl border transition-all font-medium ${
-            isInFridge
-              ? "bg-muted/60 text-muted-foreground border-border"
-              : "bg-primary/10 text-primary border-primary/20"
-          }`}
+          className="flex-1 text-xs py-1.5 rounded-xl border transition-all font-medium bg-card border-border text-muted-foreground hover:border-primary/30"
         >
-          {isInFridge ? "💤 In the fridge" : "🌡️ On the counter"}
+          {isInFridge ? "Move to counter" : "Move to fridge"}
         </button>
         {!isInFridge && (
           <Button

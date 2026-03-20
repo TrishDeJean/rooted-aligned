@@ -65,6 +65,14 @@ const COMPLETION_MESSAGES = [
   "You're allowed to rest now.",
   "You're doing just fine 🤍",
   "This is what mattered today.",
+  "This was enough for today.",
+  "This is what you showed up for today.",
+];
+
+const STARTER_MESSAGES = [
+  "Your starters are cared for 🤍",
+  "Fed and ready 🍞",
+  "Nourished and loved 🤍",
 ];
 
 const CLOSING_MESSAGES = [
@@ -102,112 +110,122 @@ function ResetSection({ emoji, title, tasks, index, isSunday, completed, onTaskC
     }
   };
 
-  const completedCount = Object.values(taskStates).filter(Boolean).length;
-  const totalTasks = tasks.filter(t => !t.includes("(optional)")).length;
-  const isComplete = completedCount === totalTasks;
+  const requiredTasks = tasks.map((t, i) => ({ task: t, index: i })).filter(({ task }) => !task.includes("(optional)"));
+  const optionalTasks = tasks.map((t, i) => ({ task: t, index: i })).filter(({ task }) => task.includes("(optional)"));
+  
+  const completedRequired = requiredTasks.filter(({ index: i }) => taskStates[i]).length;
+  const totalRequired = requiredTasks.length;
+  const isComplete = completedRequired === totalRequired;
 
   return (
     <>
-      <Card
-        className={cn(
-          "p-4 border-border/40 transition-all",
-          isComplete
-            ? "bg-primary/5 border-primary/30 shadow-sm"
-            : "bg-card hover:border-primary/20"
-        )}
+      <motion.div
+        animate={{
+          opacity: isComplete ? 0.6 : 1,
+        }}
+        transition={{ duration: 0.5 }}
       >
-        <button
-          onClick={() => setOpen(!open)}
-          className="w-full flex items-center justify-between text-left"
+        <Card
+          className={cn(
+            "p-4 border-border/40 transition-all",
+            isComplete
+              ? "bg-primary/5 border-primary/30 shadow-sm"
+              : "bg-card hover:border-primary/20"
+          )}
         >
-          <p className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <span className="text-lg">{emoji}</span>
-            {title}
-          </p>
-          <div className="flex items-center gap-3">
-            {completedCount > 0 && (
-              <span className="text-xs text-muted-foreground/60">
-                {completedCount}/{totalTasks}
-              </span>
-            )}
-            {open ? (
-              <ChevronUp className="h-4 w-4 text-muted-foreground/50" />
-            ) : (
-              <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
-            )}
-          </div>
-        </button>
-
-        {open && (
-          <div className="mt-3 space-y-2 pl-6 border-l-2 border-primary/20">
-            {tasks.map((task, i) => (
-              <label key={i} className="flex items-center gap-2.5 cursor-pointer group">
-                <input
-                  type="checkbox"
-                  checked={taskStates[i] || false}
-                  onChange={() => handleToggle(i)}
-                  className="h-4 w-4 rounded-full border-2 border-border/60 checked:bg-primary checked:border-primary accent-primary cursor-pointer"
-                />
-                <span
-                  className={cn(
-                    "text-sm transition-colors",
-                    taskStates[i]
-                      ? "line-through text-muted-foreground/40"
-                      : "text-muted-foreground group-hover:text-foreground"
-                  )}
-                >
-                  {task}
+          <button
+            onClick={() => setOpen(!open)}
+            className="w-full flex items-center justify-between text-left"
+          >
+            <p className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <span className="text-lg">{emoji}</span>
+              {title}
+            </p>
+            <div className="flex items-center gap-3">
+              {completedRequired > 0 && (
+                <span className="text-xs text-muted-foreground/60">
+                  {completedRequired}/{totalRequired}
                 </span>
-              </label>
-            ))}
+              )}
+              {open ? (
+                <ChevronUp className="h-4 w-4 text-muted-foreground/50" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-muted-foreground/50" />
+              )}
+            </div>
+          </button>
 
-            {/* Inline input for "On your mind" */}
-            {title === "Reset your mind" && !showMindInput && (
-              <button
-                onClick={() => setShowMindInput(true)}
-                className="mt-3 text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 pt-2 border-t border-border/20"
-              >
-                <Plus className="h-3 w-3" />
-                Add anything to "On your mind"
-              </button>
-            )}
+          {open && (
+            <div className="mt-3 space-y-2 pl-6 border-l-2 border-primary/20">
+              {tasks.map((task, i) => (
+                <label key={i} className={cn("flex items-center gap-2.5 cursor-pointer group", isComplete && "opacity-60")}>
+                  <input
+                    type="checkbox"
+                    checked={taskStates[i] || false}
+                    onChange={() => handleToggle(i)}
+                    className="h-4 w-4 rounded-full border-2 border-border/60 checked:bg-primary checked:border-primary accent-primary cursor-pointer"
+                  />
+                  <span
+                    className={cn(
+                      "text-sm transition-colors",
+                      taskStates[i]
+                        ? "line-through text-muted-foreground/40"
+                        : "text-muted-foreground group-hover:text-foreground"
+                    )}
+                  >
+                    {task}
+                  </span>
+                </label>
+              ))}
 
-            {title === "Reset your mind" && showMindInput && (
-              <div className="mt-3 space-y-2 pt-2 border-t border-border/20">
-                <input
-                  autoFocus
-                  value={mindInput}
-                  onChange={(e) => setMindInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAddMind();
-                  }}
-                  type="text"
-                  placeholder="What's on your mind?"
-                  className="w-full px-3 py-2 rounded-lg border border-border/50 bg-background text-sm placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-primary/10 outline-none"
-                />
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setShowMindInput(false);
-                      setMindInput("");
+              {/* Inline input for "On your mind" */}
+              {title === "Reset your mind" && !showMindInput && (
+                <button
+                  onClick={() => setShowMindInput(true)}
+                  className="mt-3 text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1 pt-2 border-t border-border/20"
+                >
+                  <Plus className="h-3 w-3" />
+                  Add anything to "On your mind"
+                </button>
+              )}
+
+              {title === "Reset your mind" && showMindInput && (
+                <div className="mt-3 space-y-2 pt-2 border-t border-border/20">
+                  <input
+                    autoFocus
+                    value={mindInput}
+                    onChange={(e) => setMindInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") handleAddMind();
                     }}
-                    className="flex-1 text-xs text-muted-foreground hover:text-foreground transition-colors py-1.5"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleAddMind}
-                    disabled={!mindInput.trim()}
-                    className="flex-1 text-xs font-medium py-1.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
-                  >
-                    Add
-                  </button>
+                    type="text"
+                    placeholder="What's on your mind?"
+                    className="w-full px-3 py-2 rounded-lg border border-border/50 bg-background text-sm placeholder:text-muted-foreground/40 focus:border-primary/40 focus:ring-primary/10 outline-none"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setShowMindInput(false);
+                        setMindInput("");
+                      }}
+                      className="flex-1 text-xs text-muted-foreground hover:text-foreground transition-colors py-1.5"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleAddMind}
+                      disabled={!mindInput.trim()}
+                      className="flex-1 text-xs font-medium py-1.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        )}
-      </Card>
+              )}
+            </div>
+          )}
+        </Card>
+      </motion.div>
 
       {isComplete && index < (isSunday ? 3 : 2) && (
         <motion.p
@@ -269,12 +287,29 @@ export default function Reset() {
     }
   });
   const [showConfirm, setShowConfirm] = useState(false);
+  const [reflection, setReflection] = useState("");
+  const [showReflection, setShowReflection] = useState(false);
+
+  const completionMessageIndex = Math.floor(Math.random() * COMPLETION_MESSAGES.length);
   const [completionMessage] = useState(
-    COMPLETION_MESSAGES[dayOfWeek % COMPLETION_MESSAGES.length]
+    COMPLETION_MESSAGES[completionMessageIndex]
   );
   const [closingMessage] = useState(
     CLOSING_MESSAGES[Math.floor(Math.random() * CLOSING_MESSAGES.length)]
   );
+
+  // Check if starter was completed
+  const starterWasCompleted = Object.values(sectionStates).some(
+    (sectionTasks) =>
+      Object.entries(sectionTasks).some(
+        ([taskIdx, completed]) =>
+          completed &&
+          (DAILY_SECTIONS[0]?.tasks[taskIdx]?.includes("Check starters") ||
+            SUNDAY_SECTIONS[0]?.tasks[taskIdx]?.includes("Feed starters"))
+      )
+  );
+
+  const shouldShowStarterMsg = starterWasCompleted && Math.random() > 0.4;
 
   // Persist section states
   useEffect(() => {
@@ -319,7 +354,12 @@ export default function Reset() {
       </div>
 
       {!completed ? (
-        <>
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+        >
           {/* Sections */}
           {sections.map((section, idx) => (
             <ResetSection
@@ -339,15 +379,67 @@ export default function Reset() {
           >
             This is enough 🤍
           </button>
-        </>
+        </motion.div>
       ) : (
-        <>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="space-y-4"
+        >
           {/* Completion State */}
           <Card className="p-8 text-center space-y-4 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
             <p className="text-lg font-semibold text-foreground">
               {completionMessage}
             </p>
           </Card>
+
+          {/* Starter message (occasional) */}
+          {shouldShowStarterMsg && (
+            <Card className="p-4 text-center bg-secondary/30 border-border/40">
+              <p className="text-sm text-foreground">
+                {STARTER_MESSAGES[Math.floor(Math.random() * STARTER_MESSAGES.length)]}
+              </p>
+            </Card>
+          )}
+
+          {/* Optional reflection */}
+          {!showReflection ? (
+            <button
+              onClick={() => setShowReflection(true)}
+              className="w-full text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors py-2"
+            >
+              What felt good today? (optional)
+            </button>
+          ) : (
+            <Card className="p-4 border-border/40">
+              <input
+                autoFocus
+                value={reflection}
+                onChange={(e) => setReflection(e.target.value)}
+                type="text"
+                placeholder="Something that felt good…"
+                className="w-full px-3 py-2 bg-background text-sm placeholder:text-muted-foreground/40 outline-none"
+              />
+              <div className="flex gap-2 mt-3">
+                <button
+                  onClick={() => {
+                    setShowReflection(false);
+                    setReflection("");
+                  }}
+                  className="flex-1 text-xs text-muted-foreground hover:text-foreground transition-colors py-1.5"
+                >
+                  Skip
+                </button>
+                <button
+                  onClick={() => setShowReflection(false)}
+                  className="flex-1 text-xs font-medium py-1.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  Done
+                </button>
+              </div>
+            </Card>
+          )}
 
           {/* Closing Message */}
           <Card className="p-6 text-center space-y-3 bg-secondary/30 border-border/40">
@@ -363,7 +455,7 @@ export default function Reset() {
           >
             Start over
           </button>
-        </>
+        </motion.div>
       )}
 
       {/* Confirmation Dialog */}

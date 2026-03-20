@@ -192,10 +192,19 @@ export default function Dashboard() {
         </Card>
       )}
 
+      {/* Notes & Reminders */}
+      <NotesSection />
+
       <AddScheduleDialog
         open={showEdit}
         onOpenChange={setShowEdit}
         editEntry={editEntry}
+      />
+
+      <KidScheduleDrawer
+        kid={selectedKid}
+        open={!!selectedKid}
+        onClose={() => setSelectedKid(null)}
       />
     </div>
     </PullToRefresh>

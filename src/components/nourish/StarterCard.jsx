@@ -32,7 +32,7 @@ export default function StarterCard({ starter, onEdit }) {
     : { label: "On the counter", color: "bg-primary/10 text-primary border-primary/20", dot: "bg-primary" };
 
   return (
-    <Card className={`p-4 space-y-3 ${isDue && !isInFridge ? "border-accent/60 bg-accent/5" : ""}`}>
+    <Card className={`p-4 space-y-3 ${isDue && !isInFridge ? "border-accent/40 bg-accent/5" : ""}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">

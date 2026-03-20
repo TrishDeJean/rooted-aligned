@@ -10,6 +10,7 @@ import Dashboard from './pages/Dashboard';
 import Schedule from './pages/Schedule';
 import Kids from './pages/Kids';
 import Profile from './pages/Profile';
+import Nourish from './pages/Nourish';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {
@@ -44,6 +45,7 @@ const AuthenticatedApp = () => {
         <Route path="/Schedule" element={<Schedule />} />
         <Route path="/Profile" element={<Kids />} />
         <Route path="/Account" element={<Profile />} />
+        <Route path="/Nourish" element={<Nourish />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

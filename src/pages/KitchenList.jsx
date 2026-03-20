@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format, startOfWeek } from "date-fns";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ShoppingBag, Check, Share2, Copy, CheckCheck } from "lucide-react";
+import { ChevronLeft, ShoppingBag, Check, Share2, Copy, CheckCheck, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -54,6 +54,7 @@ function parseItems(plan) {
 export default function KitchenList() {
   const weekStartStr = getWeekStart();
   const storageKey = `kitchenList_v2_${weekStartStr}`;
+  const queryClient = useQueryClient();
 
   const { data: plan } = useQuery({
     queryKey: ["mealPlan", weekStartStr],
@@ -90,6 +91,42 @@ export default function KitchenList() {
   const checkedCount = items.filter(i => itemStates[i.id]?.checked).length;
   const remaining = items.length - checkedCount;
   const [copied, setCopied] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [clearMessage, setClearMessage] = useState(null);
+  const [undoTimeout, setUndoTimeout] = useState(null);
+  const [backupStates, setBackupStates] = useState(null);
+
+  const updateMutation = useMutation({
+    mutationFn: async (data) => {
+      if (!plan?.id) return;
+      return base44.entities.MealPlan.update(plan.id, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mealPlan", weekStartStr] });
+    },
+  });
+
+  const handleClearList = () => {
+    setBackupStates(itemStates);
+    setItemStates({});
+    updateMutation.mutate({ week_groceries: "", running_low: "" });
+    setShowClearConfirm(false);
+    setClearMessage(true);
+
+    const timeout = setTimeout(() => setClearMessage(null), 3000);
+    setUndoTimeout(timeout);
+  };
+
+  const handleUndo = () => {
+    if (backupStates) {
+      setItemStates(backupStates);
+      if (plan?.id) {
+        updateMutation.mutate({ week_groceries: plan.week_groceries, running_low: plan.running_low });
+      }
+      setClearMessage(null);
+      if (undoTimeout) clearTimeout(undoTimeout);
+    }
+  };
 
   const buildShareText = () => {
     const hour = new Date().getHours();
@@ -258,6 +295,58 @@ export default function KitchenList() {
             </Card>
           )}
         </>
+      )}
+
+      {/* Clear Message / Undo */}
+      {clearMessage && (
+        <Card className="p-3 bg-secondary/40 border-border/40 flex items-center justify-between">
+          <p className="text-sm text-foreground">Kitchen List cleared.</p>
+          <button
+            onClick={handleUndo}
+            className="text-xs font-medium text-primary hover:underline"
+          >
+            Undo
+          </button>
+        </Card>
+      )}
+
+      {/* Clear Confirmation Modal */}
+      {showClearConfirm && (
+        <div className="fixed inset-0 bg-black/30 flex items-end z-50">
+          <Card className="w-full rounded-t-2xl p-5 space-y-4 bg-card border-t border-border/40">
+            <div>
+              <p className="text-base font-semibold text-foreground">Clear this grocery list?</p>
+              <p className="text-sm text-muted-foreground mt-1">This will remove all current grocery items.</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowClearConfirm(false)}
+                className="flex-1 text-sm font-medium py-2.5 rounded-lg border border-border/60 bg-background text-foreground hover:bg-muted/30 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleClearList}
+                className="flex-1 text-sm font-medium py-2.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                Confirm clear
+              </button>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {/* Clear Button */}
+      {items.length > 0 && !showClearConfirm && !clearMessage && (
+        <div className="flex justify-center pt-2">
+          <button
+            onClick={() => setShowClearConfirm(true)}
+            className="flex items-center gap-1.5 text-xs text-muted-foreground/60 hover:text-destructive transition-colors"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Clear list
+          </button>
+        </div>
       )}
     </div>
   );

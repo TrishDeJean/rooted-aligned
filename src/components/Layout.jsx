@@ -30,7 +30,7 @@ export default function Layout() {
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between select-none">
           <div className="flex items-center gap-2.5">
             <img
-              src="https://media.base44.com/images/public/69bb73cfd8e97b1ddec8682e/458875f10_ChatGPTImageMar19202607_12_08PM.png"
+              src="https://media.base44.com/images/public/69bb73cfd8e97b1ddec8682e/3495754ba_Untitleddesign.png"
               alt="Rooted & Aligned"
               className="h-8 w-8 rounded-xl object-cover"
             />

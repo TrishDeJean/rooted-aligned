@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { format, startOfWeek } from "date-fns";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ShoppingBag, Check } from "lucide-react";
+import { ChevronLeft, ShoppingBag, Check, Share2, Copy, CheckCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -89,6 +89,43 @@ export default function KitchenList() {
 
   const checkedCount = items.filter(i => itemStates[i.id]?.checked).length;
   const remaining = items.length - checkedCount;
+  const [copied, setCopied] = useState(false);
+
+  const buildShareText = () => {
+    const hour = new Date().getHours();
+    const timeLabel = hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
+    const dayLabel = format(new Date(), "EEEE");
+    let text = `Kitchen List 🧺\nUpdated: ${dayLabel} ${timeLabel}\n`;
+
+    CATEGORIES.forEach(({ key, label }) => {
+      const catItems = grouped[key] || [];
+      if (!catItems.length) return;
+      text += `\n${label.replace(/^[^\s]+\s/, "")}\n`; // strip emoji for cleaner text
+      catItems.forEach(item => {
+        const sub = item.context || (item.source === "running low" ? "running low" : null);
+        text += `- ${item.name}${sub ? ` (${sub})` : ""}\n`;
+      });
+    });
+
+    return text.trim();
+  };
+
+  const handleShare = async () => {
+    const text = buildShareText();
+    if (navigator.share) {
+      navigator.share({ title: "Kitchen List 🧺", text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(buildShareText());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="space-y-6 pb-8">
@@ -96,13 +133,31 @@ export default function KitchenList() {
         <Link to="/KitchenPlan" className="text-muted-foreground hover:text-foreground transition-colors">
           <ChevronLeft className="h-5 w-5" />
         </Link>
-        <div>
+        <div className="flex-1">
           <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             <ShoppingBag className="h-6 w-6 text-accent" />
             Kitchen List
           </h2>
           <p className="text-sm text-muted-foreground italic">What you might need this week</p>
         </div>
+        {items.length > 0 && (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleCopy}
+              title="Copy list"
+              className="h-8 w-8 rounded-xl border border-border/60 bg-card flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/40 transition-all"
+            >
+              {copied ? <CheckCheck className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4" />}
+            </button>
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-xl border border-accent/40 bg-accent/10 text-accent-foreground hover:bg-accent/20 transition-all"
+            >
+              <Share2 className="h-3.5 w-3.5" />
+              Share list
+            </button>
+          </div>
+        )}
       </div>
 
       {items.length === 0 ? (

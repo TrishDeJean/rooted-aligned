@@ -6,6 +6,53 @@ import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import ScheduleCard from "@/components/schedule/ScheduleCard";
+
+function timeGroup(time) {
+  if (!time) return "morning";
+  const [h] = time.split(":").map(Number);
+  if (h < 12) return "morning";
+  if (h < 17) return "afternoon";
+  return "evening";
+}
+
+function ScheduleGrouped({ entries, kids, onToggle, onEdit }) {
+  const groups = { morning: [], afternoon: [], evening: [] };
+  entries.forEach(e => groups[timeGroup(e.start_time)].push(e));
+  const labels = { morning: "Morning", afternoon: "Afternoon", evening: "Evening" };
+  const completed = entries.filter(e => e.completed).length;
+  const total = entries.length;
+
+  return (
+    <div className="space-y-4">
+      {/* Soft progress bar */}
+      {total > 0 && (
+        <div className="h-1 bg-muted rounded-full overflow-hidden">
+          <div
+            className="h-full bg-primary/50 rounded-full transition-all duration-700"
+            style={{ width: `${(completed / total) * 100}%` }}
+          />
+        </div>
+      )}
+      {["morning", "afternoon", "evening"].map(group => {
+        if (!groups[group].length) return null;
+        return (
+          <div key={group} className="space-y-2">
+            <p className="text-[11px] font-semibold text-muted-foreground/50 tracking-widest uppercase">{labels[group]}</p>
+            {groups[group].map(entry => (
+              <ScheduleCard
+                key={entry.id}
+                entry={entry}
+                kids={kids}
+                onToggleComplete={onToggle}
+                onEdit={onEdit}
+              />
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 import AddScheduleDialog from "@/components/schedule/AddScheduleDialog";
 
 export default function Schedule() {
@@ -73,6 +120,7 @@ export default function Schedule() {
           <h2 className="text-2xl font-bold tracking-tight">Your Flow</h2>
           <p className="text-sm text-muted-foreground/70 italic">Move gently through today.</p>
         </div>
+
         {!isToday && (
           <Button variant="ghost" size="sm" onClick={() => setSelectedDate(new Date())}>
             <CalendarDays className="h-4 w-4 mr-1" />
@@ -123,10 +171,11 @@ export default function Schedule() {
         </Button>
       </div>
 
-      {/* Month label */}
-      <p className="text-sm font-medium text-muted-foreground">
-        {format(selectedDate, "EEEE, MMMM d, yyyy")}
-      </p>
+      {/* Date label + tagline */}
+      <div>
+        <p className="text-sm font-medium text-muted-foreground">{format(selectedDate, "EEEE, MMMM d, yyyy")}</p>
+        <p className="text-xs text-muted-foreground/50 italic mt-0.5">Here's how your day is unfolding.</p>
+      </div>
 
       {/* Schedule List */}
       {isLoading ? (
@@ -142,19 +191,12 @@ export default function Schedule() {
           <p className="text-xs text-muted-foreground mt-1">Tap + to add an activity</p>
         </Card>
       ) : (
-        <div className="space-y-2">
-          {entries
-            .filter(entry => !entry.kids?.length || entry.kids.some(id => presentKidIds.includes(id)))
-            .map(entry => (
-              <ScheduleCard
-                key={entry.id}
-                entry={entry}
-                kids={kids}
-                onToggleComplete={(id, completed) => toggleMutation.mutate({ id, completed })}
-                onEdit={(e) => { setEditEntry(e); setShowEdit(true); }}
-              />
-            ))}
-        </div>
+        <ScheduleGrouped
+          entries={entries.filter(entry => !entry.kids?.length || entry.kids.some(id => presentKidIds.includes(id)))}
+          kids={kids}
+          onToggle={(id, completed) => toggleMutation.mutate({ id, completed })}
+          onEdit={(e) => { setEditEntry(e); setShowEdit(true); }}
+        />
       )}
 
       <AddScheduleDialog

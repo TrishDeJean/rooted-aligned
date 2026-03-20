@@ -8,10 +8,13 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const CATEGORIES = [
-  { key: "fresh",  label: "🥬 Fresh" },
-  { key: "fridge", label: "🧊 Fridge" },
-  { key: "pantry", label: "🫙 Pantry" },
-  { key: "other",  label: "🛒 Other" },
+  { key: "produce",  label: "🥬 Produce" },
+  { key: "dairy",    label: "🥛 Dairy" },
+  { key: "pantry",   label: "🫙 Pantry" },
+  { key: "bread",    label: "🍞 Bread & Baking" },
+  { key: "snacks",   label: "🍎 Snacks" },
+  { key: "freezer",  label: "❄️ Freezer" },
+  { key: "other",    label: "🛒 Other" },
 ];
 
 function getWeekStart() {
@@ -19,31 +22,38 @@ function getWeekStart() {
 }
 
 function parseItems(plan) {
-  const raw = plan?.week_groceries || "";
   const items = [];
-  raw.split("\n").forEach(line => {
-    const text = line.trim();
-    if (!text) return;
-    const sepIdx = text.indexOf(" — ");
-    if (sepIdx > -1) {
-      items.push({ id: text, name: text.slice(0, sepIdx).trim(), context: text.slice(sepIdx + 3).trim() });
-    } else {
-      items.push({ id: text, name: text, context: null });
-    }
-  });
-  // dedupe by lowercased name (keep first occurrence)
   const seen = new Set();
-  return items.filter(item => {
-    const key = item.name.toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+
+  const addLines = (raw, source) => {
+    (raw || "").split("\n").forEach(line => {
+      const text = line.trim();
+      if (!text) return;
+      const sepIdx = text.indexOf(" — ");
+      let name, context;
+      if (sepIdx > -1) {
+        name = text.slice(0, sepIdx).trim();
+        context = text.slice(sepIdx + 3).trim();
+      } else {
+        name = text;
+        context = null;
+      }
+      const key = name.toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      items.push({ id: text, name, context, source });
+    });
+  };
+
+  addLines(plan?.week_groceries, "meal plan");
+  addLines(plan?.running_low, "running low");
+
+  return items;
 }
 
 export default function KitchenList() {
   const weekStartStr = getWeekStart();
-  const storageKey = `kitchenList_${weekStartStr}`;
+  const storageKey = `kitchenList_v2_${weekStartStr}`;
 
   const { data: plan } = useQuery({
     queryKey: ["mealPlan", weekStartStr],
@@ -64,23 +74,21 @@ export default function KitchenList() {
 
   const items = parseItems(plan);
 
-  const toggle = (id) => {
+  const toggle = (id) =>
     setItemStates(prev => ({ ...prev, [id]: { ...prev[id], checked: !prev[id]?.checked } }));
-  };
 
-  const setCategory = (id, category) => {
+  const setCategory = (id, category) =>
     setItemStates(prev => ({ ...prev, [id]: { ...prev[id], category } }));
-  };
 
   const grouped = {};
   CATEGORIES.forEach(c => { grouped[c.key] = []; });
   items.forEach(item => {
     const cat = itemStates[item.id]?.category || "other";
-    grouped[cat] = grouped[cat] || [];
-    grouped[cat].push(item);
+    (grouped[cat] = grouped[cat] || []).push(item);
   });
 
   const checkedCount = items.filter(i => itemStates[i.id]?.checked).length;
+  const remaining = items.length - checkedCount;
 
   return (
     <div className="space-y-6 pb-8">
@@ -100,17 +108,40 @@ export default function KitchenList() {
       {items.length === 0 ? (
         <Card className="p-8 text-center border-dashed space-y-2">
           <p className="text-muted-foreground font-medium">Nothing here yet</p>
-          <p className="text-xs text-muted-foreground/60">Add items in "Need this week" in your Kitchen Plan</p>
+          <p className="text-xs text-muted-foreground/60">Add items in your Kitchen Plan</p>
           <Link to="/KitchenPlan" className="text-xs text-primary hover:underline block mt-1">Go to Kitchen Plan →</Link>
         </Card>
       ) : (
         <>
-          {checkedCount > 0 && (
-            <p className="text-xs text-muted-foreground/50 text-center">
-              {checkedCount} of {items.length} picked up ✓
-            </p>
-          )}
+          {/* Weekly overview */}
+          <Card className="p-4 bg-secondary/30 border-border/40 space-y-2">
+            <p className="text-sm font-semibold text-foreground">This week you need:</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl font-bold text-primary">{remaining}</span>
+              <span className="text-sm text-muted-foreground">item{remaining !== 1 ? "s" : ""} left to pick up</span>
+            </div>
+            {checkedCount > 0 && (
+              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-primary/60 rounded-full transition-all duration-500"
+                  style={{ width: `${(checkedCount / items.length) * 100}%` }}
+                />
+              </div>
+            )}
+            <div className="flex flex-wrap gap-2 pt-1">
+              {CATEGORIES.map(({ key, label }) => {
+                const count = (grouped[key] || []).filter(i => !itemStates[i.id]?.checked).length;
+                if (!count) return null;
+                return (
+                  <span key={key} className="text-[10px] px-2 py-0.5 rounded-full bg-background border border-border/50 text-muted-foreground">
+                    {label} · {count}
+                  </span>
+                );
+              })}
+            </div>
+          </Card>
 
+          {/* Grouped list */}
           <div className="space-y-5">
             {CATEGORIES.map(({ key, label }) => {
               const catItems = grouped[key] || [];
@@ -141,8 +172,10 @@ export default function KitchenList() {
                             <p className={cn("text-sm leading-snug", state.checked && "line-through text-muted-foreground/40")}>
                               {item.name}
                             </p>
-                            {item.context && !state.checked && (
-                              <p className="text-[10px] text-muted-foreground/45 mt-0.5">{item.context}</p>
+                            {!state.checked && (item.context || item.source === "running low") && (
+                              <p className="text-[10px] text-muted-foreground/40 mt-0.5">
+                                {item.context || "running low"}
+                              </p>
                             )}
                           </div>
                           <select

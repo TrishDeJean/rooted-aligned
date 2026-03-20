@@ -16,6 +16,7 @@ import CheckIn from './pages/CheckIn';
 import ResetYourSpace from './pages/ResetYourSpace';
 import KitchenPlan from './pages/KitchenPlan';
 import KitchenList from './pages/KitchenList';
+import Pantry from './pages/Pantry';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {
@@ -56,6 +57,7 @@ const AuthenticatedApp = () => {
         <Route path="/ResetYourSpace" element={<ResetYourSpace />} />
         <Route path="/KitchenPlan" element={<KitchenPlan />} />
         <Route path="/KitchenList" element={<KitchenList />} />
+        <Route path="/Pantry" element={<Pantry />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

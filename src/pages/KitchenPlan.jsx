@@ -5,6 +5,7 @@ import { format, startOfWeek, addDays } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { ChevronLeft, ChevronRight, ShoppingBag, Plus } from "lucide-react";
+
 import { Link } from "react-router-dom";
 
 const DAYS = [
@@ -246,7 +247,7 @@ export default function KitchenPlan() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-semibold text-foreground">🛒 Need this week</p>
-            <p className="text-xs text-muted-foreground/50 mt-0.5">One item per line — feeds your Kitchen List</p>
+            <p className="text-xs text-muted-foreground/50 mt-0.5">Meal-based items — one per line</p>
           </div>
           <Link to="/KitchenList" className="text-xs text-primary hover:underline">View list →</Link>
         </div>
@@ -258,6 +259,33 @@ export default function KitchenPlan() {
           className="resize-none text-sm bg-background/60 border-border/40 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40"
         />
       </Card>
+
+      {/* Running low section */}
+      <Card className="p-5 space-y-3 bg-accent/5 border-accent/20">
+        <div>
+          <p className="text-sm font-semibold text-foreground">🪴 Running low</p>
+          <p className="text-xs text-muted-foreground/50 mt-0.5">Quick "don't forget" items — one per line or comma-separated</p>
+        </div>
+        <Textarea
+          value={local.running_low || ""}
+          onChange={e => handleChange("running_low", e.target.value)}
+          placeholder={"butter\neggs\ntoothpaste…"}
+          rows={3}
+          className="resize-none text-sm bg-background/60 border-border/40 rounded-xl placeholder:text-muted-foreground/30 focus:border-primary/40"
+        />
+      </Card>
+
+      {/* Pantry link */}
+      <Link
+        to="/Pantry"
+        className="flex items-center justify-between p-4 rounded-xl border border-border/50 bg-card hover:border-primary/30 hover:bg-primary/5 transition-all"
+      >
+        <div>
+          <p className="text-sm font-medium text-foreground">🫙 Pantry overview</p>
+          <p className="text-xs text-muted-foreground/50">See what's stocked, low, or out</p>
+        </div>
+        <ChevronRight className="h-4 w-4 text-muted-foreground/40" />
+      </Link>
 
       <p className="text-center text-xs text-muted-foreground/40 italic pt-2">
         This is here to support you, not to pressure you.

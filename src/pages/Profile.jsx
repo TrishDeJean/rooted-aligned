@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { User, Cake, Pencil, Trash2, AlertTriangle, LogOut, Wind, Heart, Sparkles, Settings } from "lucide-react";
+import { User, Cake, Pencil, Trash2, AlertTriangle, LogOut, Wind, Heart, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import KidAvatar from "@/components/kids/KidAvatar";
 import AddKidDialog from "@/components/kids/AddKidDialog";
 import { formatAge } from "@/utils/formatAge";
 import { Link } from "react-router-dom";
 import TodaysIntention from "@/components/profile/TodaysIntention";
+import BreathingExperience from "@/components/profile/BreathingExperience";
+import { AnimatePresence } from "framer-motion";
 
 export default function Profile() {
   const [showEdit, setShowEdit] = useState(false);

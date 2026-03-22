@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import BreathingExperience from "@/components/BreathingExperience";
 
 const OPTIONS = [
   { key: "breath", title: "3 deep breaths", sub: "Inhale slowly, exhale gently" },

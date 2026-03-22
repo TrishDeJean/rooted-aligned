@@ -10,10 +10,26 @@ const OPTIONS = [
   { key: "sit", title: "Just sit", sub: "No doing. Just be." },
 ];
 
+const MOOD_HINT = {
+  overwhelmed: "breath",
+  tired: "sit",
+  exhausted: "sit",
+  scattered: "look",
+};
+
 export default function TakeAMoment() {
   const [selected, setSelected] = useState(null);
   const [showBreathing, setShowBreathing] = useState(false);
   const navigate = useNavigate();
+
+  const { data: lastCheckIn } = useQuery({
+    queryKey: ["lastCheckIn"],
+    queryFn: () => base44.entities.CheckInLog.list("-checked_at", 1),
+    select: (data) => data?.[0] ?? null,
+  });
+
+  const mood = lastCheckIn?.mood?.toLowerCase() || "";
+  const suggestedKey = Object.entries(MOOD_HINT).find(([m]) => mood.includes(m))?.[1] ?? null;
 
   return (
     <div className="min-h-screen flex flex-col px-5 pt-10 pb-16 space-y-8">

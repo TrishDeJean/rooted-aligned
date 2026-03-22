@@ -40,23 +40,28 @@ export default function TakeAMoment() {
       </div>
 
       <div className="space-y-3">
-        {OPTIONS.map(({ key, title, sub }) => (
-          <button
-            key={key}
-            onClick={() => {
-              if (key === "breath") { setShowBreathing(true); return; }
-              setSelected(selected === key ? null : key);
-            }}
-            className={`w-full text-left p-5 rounded-2xl border transition-all duration-200 ${
-              selected === key
-                ? "bg-[#A8B5A2] border-[#A8B5A2]"
-                : "bg-card border-border/40 hover:border-primary/20"
-            }`}
-          >
-            <p className={`font-semibold ${selected === key ? "text-[#2d3a2d]" : "text-foreground"}`}>{title}</p>
-            <p className={`text-sm mt-0.5 ${selected === key ? "text-[#3a4a3a]/80" : "text-muted-foreground"}`}>{sub}</p>
-          </button>
-        ))}
+        {OPTIONS.map(({ key, title, sub }) => {
+          const isSuggested = suggestedKey === key && selected !== key;
+          return (
+            <button
+              key={key}
+              onClick={() => {
+                if (key === "breath") { setShowBreathing(true); return; }
+                setSelected(selected === key ? null : key);
+              }}
+              className={`w-full text-left p-5 rounded-2xl border transition-all duration-200 ${
+                selected === key
+                  ? "bg-[#A8B5A2] border-[#A8B5A2]"
+                  : isSuggested
+                  ? "bg-primary/5 border-primary/20"
+                  : "bg-card border-border/40 hover:border-primary/20"
+              }`}
+            >
+              <p className={`font-semibold ${selected === key ? "text-[#2d3a2d]" : "text-foreground"}`}>{title}</p>
+              <p className={`text-sm mt-0.5 ${selected === key ? "text-[#3a4a3a]/80" : "text-muted-foreground"}`}>{sub}</p>
+            </button>
+          );
+        })}
       </div>
 
       <div className="mt-auto pt-4 flex flex-col items-center gap-4">

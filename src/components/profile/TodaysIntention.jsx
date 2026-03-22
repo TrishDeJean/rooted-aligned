@@ -24,13 +24,13 @@ export default function TodaysIntention() {
 
   return (
     <div className="space-y-1 pt-1">
-      <p className="text-xs text-muted-foreground/60 italic">today's intention</p>
+      <p className="text-xs text-muted-foreground/50 italic">Today's intention</p>
       <input
         type="text"
         value={value}
         onChange={e => handleChange(e.target.value)}
-        placeholder="one small, gentle thing…"
-        className="w-full text-sm bg-transparent border-0 border-b border-border/40 pb-1 outline-none placeholder:text-muted-foreground/40 text-foreground/75 focus:border-primary/40 transition-colors"
+        placeholder="One small, gentle thing…"
+        className="w-full text-sm bg-transparent border-0 border-b border-border/40 pb-1 outline-none placeholder:text-muted-foreground/30 text-foreground focus:border-primary/40 transition-colors"
       />
     </div>
   );

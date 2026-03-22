@@ -1,25 +1,20 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { User, Cake, Pencil, Trash2, AlertTriangle, LogOut, Wind, Heart, Sparkles } from "lucide-react";
+import { User, Cake, Pencil, Trash2, AlertTriangle, LogOut, Wind, Heart, Sparkles, Settings } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import KidAvatar from "@/components/kids/KidAvatar";
 import AddKidDialog from "@/components/kids/AddKidDialog";
 import { formatAge } from "@/utils/formatAge";
 import { Link } from "react-router-dom";
 import TodaysIntention from "@/components/profile/TodaysIntention";
-import BreathingExperience from "@/components/profile/BreathingExperience";
-import MomentSelection from "@/components/profile/MomentSelection";
-import { AnimatePresence } from "framer-motion";
 
 export default function Profile() {
   const [showEdit, setShowEdit] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteStep, setDeleteStep] = useState(1);
-  const [showBreathing, setShowBreathing] = useState(false);
-  const [showMomentSelection, setShowMomentSelection] = useState(false);
-  const [selectedMoment, setSelectedMoment] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: people = [], isLoading } = useQuery({
@@ -45,27 +40,8 @@ export default function Profile() {
 
   const age = me ? formatAge(me.birthday) || (me.age ? `${me.age} years old` : null) : null;
 
-  const mood = lastCheckIn?.mood?.toLowerCase() || "";
-  const isOverwhelmed = ["overwhelmed", "anxious", "stressed"].some(m => mood.includes(m));
-  const isTired = ["tired", "exhausted", "low", "drained"].some(m => mood.includes(m));
-  const isScattered = ["scattered", "distracted", "unfocused"].some(m => mood.includes(m));
-
-  const momentSuggestion = isOverwhelmed
-    ? { hint: "you might need a breath right now", highlight: true }
-    : isTired
-    ? { hint: "maybe just sit for a moment", highlight: false }
-    : isScattered
-    ? { hint: "look around — name what you see", highlight: false }
-    : null;
-
   return (
     <div className="space-y-8">
-      <AnimatePresence>
-        {showBreathing && (
-          <BreathingExperience onClose={() => setShowBreathing(false)} />
-        )}
-      </AnimatePresence>
-
       <div>
         <h2 className="text-2xl font-bold tracking-tight">You</h2>
         <p className="text-sm text-muted-foreground/60 italic">{["Come back to yourself.", "A moment just for you.", "Breathe, you're here."][new Date().getDay() % 3]}</p>
@@ -107,56 +83,32 @@ export default function Profile() {
 
       {/* How does today feel */}
       <div className="space-y-2">
-        <p className="text-sm font-medium text-foreground/80">How does today feel?</p>
+        <p className="text-sm font-medium text-foreground">How does today feel?</p>
         {lastCheckIn?.mood ? (
-          <p className="text-xs text-muted-foreground/60">Today feels: <span className="text-primary/80 font-medium">{lastCheckIn.mood}</span></p>
+          <p className="text-xs text-muted-foreground/70">Today feels: <span className="text-primary font-medium">{lastCheckIn.mood}</span></p>
         ) : (
-          <p className="text-xs text-muted-foreground/40 italic">No check-in yet</p>
+          <p className="text-xs text-muted-foreground/50 italic">No check-in yet</p>
         )}
         <TodaysIntention />
       </div>
 
       {/* Gentle moments */}
       <div className="space-y-3">
-        <p className="text-xs text-muted-foreground/50 tracking-wide">a moment for you</p>
-
-        {/* Context-aware suggestion */}
-        {momentSuggestion && (
-          <p className="text-xs text-muted-foreground/60 italic px-1">{momentSuggestion.hint}</p>
-        )}
-
-        <div className="space-y-1.5">
-          {/* Take a moment — opens breathing experience */}
-          <button
-            onClick={() => setShowBreathing(true)}
-            className={`w-full text-left px-4 py-3.5 rounded-2xl transition-all active:scale-[0.98] ${
-              momentSuggestion?.highlight
-                ? "bg-primary/10 border border-primary/20"
-                : "bg-card/80 border border-border/30 hover:border-primary/20"
-            }`}
-          >
-            <p className="text-sm text-foreground/80">take a moment</p>
-            <p className="text-xs text-muted-foreground/50 mt-0.5">a breath, just for you</p>
-          </button>
-
-          {/* Check in */}
-          <Link
-            to="/CheckIn"
-            className="block w-full px-4 py-3.5 rounded-2xl bg-card/80 border border-border/30 hover:border-primary/20 transition-all active:scale-[0.98]"
-          >
-            <p className="text-sm text-foreground/80">check in with yourself</p>
-            <p className="text-xs text-muted-foreground/50 mt-0.5">how are you, really?</p>
+        <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">A moment for you</h3>
+        <Card className="divide-y divide-border/50">
+          <Link to="/TakeAMoment" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-t-xl">
+            <Wind className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium">Take a moment</span>
           </Link>
-
-          {/* Reset your space */}
-          <Link
-            to="/ResetYourSpace"
-            className="block w-full px-4 py-3.5 rounded-2xl bg-card/80 border border-border/30 hover:border-primary/20 transition-all active:scale-[0.98]"
-          >
-            <p className="text-sm text-foreground/80">soften your space</p>
-            <p className="text-xs text-muted-foreground/50 mt-0.5">a small tidy, if it helps</p>
+          <Link to="/CheckIn" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors">
+            <Heart className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium">Check in with yourself</span>
           </Link>
-        </div>
+          <Link to="/ResetYourSpace" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-b-xl">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span className="text-sm font-medium">Reset your space</span>
+          </Link>
+        </Card>
       </div>
 
       {/* Settings */}

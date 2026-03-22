@@ -15,6 +15,7 @@ export default function TakeAMoment() {
 
   return (
     <div className="min-h-screen flex flex-col px-5 pt-10 pb-16 space-y-8">
+      {showBreathing && <BreathingExperience onClose={() => setShowBreathing(false)} />}
       <div className="space-y-1">
         <h2 className="text-2xl font-bold tracking-tight">Take a moment</h2>
         <p className="text-sm text-muted-foreground/70 italic">Breathe. You're allowed to pause.</p>

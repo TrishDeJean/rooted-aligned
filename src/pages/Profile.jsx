@@ -42,8 +42,27 @@ export default function Profile() {
 
   const age = me ? formatAge(me.birthday) || (me.age ? `${me.age} years old` : null) : null;
 
+  const mood = lastCheckIn?.mood?.toLowerCase() || "";
+  const isOverwhelmed = ["overwhelmed", "anxious", "stressed"].some(m => mood.includes(m));
+  const isTired = ["tired", "exhausted", "low", "drained"].some(m => mood.includes(m));
+  const isScattered = ["scattered", "distracted", "unfocused"].some(m => mood.includes(m));
+
+  const momentSuggestion = isOverwhelmed
+    ? { hint: "you might need a breath right now", highlight: true }
+    : isTired
+    ? { hint: "maybe just sit for a moment", highlight: false }
+    : isScattered
+    ? { hint: "look around — name what you see", highlight: false }
+    : null;
+
   return (
     <div className="space-y-8">
+      <AnimatePresence>
+        {showBreathing && (
+          <BreathingExperience onClose={() => setShowBreathing(false)} />
+        )}
+      </AnimatePresence>
+
       <div>
         <h2 className="text-2xl font-bold tracking-tight">You</h2>
         <p className="text-sm text-muted-foreground/60 italic">{["Come back to yourself.", "A moment just for you.", "Breathe, you're here."][new Date().getDay() % 3]}</p>

@@ -25,7 +25,10 @@ export default function TakeAMoment() {
         {OPTIONS.map(({ key, title, sub }) => (
           <button
             key={key}
-            onClick={() => setSelected(selected === key ? null : key)}
+            onClick={() => {
+              if (key === "breath") { setShowBreathing(true); return; }
+              setSelected(selected === key ? null : key);
+            }}
             className={`w-full text-left p-5 rounded-2xl border transition-all duration-200 ${
               selected === key
                 ? "bg-[#A8B5A2] border-[#A8B5A2]"

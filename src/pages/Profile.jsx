@@ -93,23 +93,48 @@ export default function Profile() {
       </div>
 
       {/* Gentle moments */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">A moment for you</h3>
-        <Card className="divide-y divide-border/50">
-          <Link to="/TakeAMoment" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-t-xl">
-            <Wind className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">Take a moment</span>
-          </Link>
-          <Link to="/CheckIn" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors">
-            <Heart className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">Check in with yourself</span>
-          </Link>
-          <Link to="/ResetYourSpace" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-b-xl">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span className="text-sm font-medium">Reset your space</span>
-          </Link>
-        </Card>
-      </div>
+      {(() => {
+        const mood = lastCheckIn?.mood?.toLowerCase() || "";
+        const isOverwhelmed = mood.includes("overwhelmed");
+        const isTired = mood.includes("tired") || mood.includes("exhausted");
+        const isScattered = mood.includes("scattered");
+
+        const microcopy = isOverwhelmed
+          ? "maybe a breath first"
+          : isTired
+          ? "maybe just sit for a moment"
+          : isScattered
+          ? "maybe look around first"
+          : null;
+
+        const highlightTakeAMoment = isOverwhelmed || isTired || isScattered;
+
+        return (
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground tracking-wide">A moment for you</h3>
+            {microcopy && (
+              <p className="text-xs text-muted-foreground/50 italic pl-0.5">{microcopy}</p>
+            )}
+            <Card className="divide-y divide-border/50">
+              <Link
+                to="/TakeAMoment"
+                className={`w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-t-xl ${highlightTakeAMoment ? "bg-primary/5" : ""}`}
+              >
+                <Wind className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium">Take a moment</span>
+              </Link>
+              <Link to="/CheckIn" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors">
+                <Heart className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium">Check in with yourself</span>
+              </Link>
+              <Link to="/ResetYourSpace" className="w-full flex items-center gap-3 p-4 text-left hover:bg-muted/40 transition-colors rounded-b-xl">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium">Reset your space</span>
+              </Link>
+            </Card>
+          </div>
+        );
+      })()}
 
       {/* Settings */}
       <div className="space-y-3">

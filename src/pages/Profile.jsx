@@ -10,6 +10,7 @@ import { formatAge } from "@/utils/formatAge";
 import { Link } from "react-router-dom";
 import TodaysIntention from "@/components/profile/TodaysIntention";
 import BreathingExperience from "@/components/profile/BreathingExperience";
+import MomentSelection from "@/components/profile/MomentSelection";
 import { AnimatePresence } from "framer-motion";
 
 export default function Profile() {

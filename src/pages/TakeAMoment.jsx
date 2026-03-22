@@ -10,6 +10,7 @@ const OPTIONS = [
 
 export default function TakeAMoment() {
   const [selected, setSelected] = useState(null);
+  const [showBreathing, setShowBreathing] = useState(false);
   const navigate = useNavigate();
 
   return (

@@ -18,6 +18,8 @@ export default function Profile() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteStep, setDeleteStep] = useState(1);
   const [showBreathing, setShowBreathing] = useState(false);
+  const [showMomentSelection, setShowMomentSelection] = useState(false);
+  const [selectedMoment, setSelectedMoment] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: people = [], isLoading } = useQuery({

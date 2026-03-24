@@ -42,6 +42,7 @@ export default function Pantry() {
       const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr });
       return results[0] ?? null;
     },
+    staleTime: 5 * 60 * 1000,
   });
 
   const updateMutation = useMutation({

@@ -64,14 +64,16 @@ export default function Dashboard() {
     });
 
   const { data: kids = [] } = useQuery({
-    queryKey: ["kids"],
-    queryFn: () => base44.entities.Kid.list(),
+    queryKey: ["kids", user?.email],
+    queryFn: () => base44.entities.Kid.filter({ created_by: user.email }),
+    enabled: !!user,
   });
 
   const { data: lastCheckIn } = useQuery({
-    queryKey: ["lastCheckIn"],
-    queryFn: () => base44.entities.CheckInLog.list("-checked_at", 1),
+    queryKey: ["lastCheckIn", user?.email],
+    queryFn: () => base44.entities.CheckInLog.filter({ created_by: user.email }, "-checked_at", 1),
     select: (data) => data?.[0] ?? null,
+    enabled: !!user,
   });
 
   const isLowEnergy = lastCheckIn?.mood
@@ -79,8 +81,9 @@ export default function Dashboard() {
     : false;
 
   const { data: starters = [] } = useQuery({
-    queryKey: ["starters"],
-    queryFn: () => base44.entities.Starter.list("-updated_date"),
+    queryKey: ["starters", user?.email],
+    queryFn: () => base44.entities.Starter.filter({ created_by: user.email }, "-updated_date"),
+    enabled: !!user,
   });
 
   const startersNeedingCare = starters.filter(s =>

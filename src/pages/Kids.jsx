@@ -12,10 +12,12 @@ export default function Kids() {
   const [showDialog, setShowDialog] = useState(false);
   const [editKid, setEditKid] = useState(null);
   const queryClient = useQueryClient();
+  const user = useCurrentUser();
 
   const { data: kids = [], isLoading } = useQuery({
-    queryKey: ["kids"],
-    queryFn: () => base44.entities.Kid.list(),
+    queryKey: ["kids", user?.email],
+    queryFn: () => base44.entities.Kid.filter({ created_by: user.email }),
+    enabled: !!user,
   });
 
   const adults = kids.filter(k => k.type === "adult");

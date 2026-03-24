@@ -22,12 +22,14 @@ export default function TakeAMoment() {
   const [selected, setSelected] = useState(null);
   const [showBreathing, setShowBreathing] = useState(false);
   const navigate = useNavigate();
+  const user = useCurrentUser();
 
   const { data: lastCheckIn } = useQuery({
-    queryKey: ["lastCheckIn"],
-    queryFn: () => base44.entities.CheckInLog.list("-checked_at", 1),
+    queryKey: ["lastCheckIn", user?.email],
+    queryFn: () => base44.entities.CheckInLog.filter({ created_by: user.email }, "-checked_at", 1),
     select: (data) => data?.[0] ?? null,
     staleTime: 2 * 60 * 1000,
+    enabled: !!user,
   });
 
   const mood = lastCheckIn?.mood?.toLowerCase() || "";

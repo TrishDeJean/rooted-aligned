@@ -37,7 +37,7 @@ export default function Dashboard() {
 
   const { data: recurringEntries = [], isLoading: loadingEntries } = useQuery({
     queryKey: ["recurringEntries"],
-    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true }),
+    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true }, "start_time"),
   });
 
   const todayDayOfWeek = new Date().getDay();

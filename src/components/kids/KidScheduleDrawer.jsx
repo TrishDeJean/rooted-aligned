@@ -20,11 +20,12 @@ function formatTime(time) {
 export default function KidScheduleDrawer({ kid, open, onClose }) {
   const [view, setView] = useState("today");
   const today = format(new Date(), "yyyy-MM-dd");
+  const user = useCurrentUser();
 
   const { data: allEntries = [] } = useQuery({
-    queryKey: ["allEntries", kid?.id],
-    queryFn: () => base44.entities.ScheduleEntry.list(),
-    enabled: !!kid,
+    queryKey: ["allEntries", kid?.id, user?.email],
+    queryFn: () => base44.entities.ScheduleEntry.filter({ created_by: user.email }),
+    enabled: !!kid && !!user,
   });
 
   if (!kid) return null;

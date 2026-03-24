@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BreathingExperience from "@/components/BreathingExperience";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const OPTIONS = [
   { key: "breath", title: "3 deep breaths", sub: "Inhale slowly, exhale gently" },

@@ -1,22 +1,26 @@
 import { useState, useEffect, useRef } from "react";
-
-const STORAGE_KEY = "todays_intention";
+import { useCurrentUser, userKey } from "@/hooks/useCurrentUser";
 
 export default function TodaysIntention() {
-  const [value, setValue] = useState(() => {
-    try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-      const today = new Date().toISOString().slice(0, 10);
-      return stored.date === today ? stored.text : "";
-    } catch { return ""; }
-  });
+  const user = useCurrentUser();
+  const storageKey = userKey(user, "todays_intention");
+
+  const [value, setValue] = useState("");
   const timer = useRef(null);
+
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(storageKey) || "{}");
+      const today = new Date().toISOString().slice(0, 10);
+      setValue(stored.date === today ? stored.text : "");
+    } catch { setValue(""); }
+  }, [storageKey]);
 
   const handleChange = (text) => {
     setValue(text);
     clearTimeout(timer.current);
     timer.current = setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ date: new Date().toISOString().slice(0, 10), text }));
+      localStorage.setItem(storageKey, JSON.stringify({ date: new Date().toISOString().slice(0, 10), text }));
     }, 600);
   };
 

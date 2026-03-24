@@ -1,17 +1,24 @@
 import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
-
-const STORAGE_KEY = "on_your_mind";
+import { useCurrentUser, userKey } from "@/hooks/useCurrentUser";
 
 export default function OnYourMind() {
-  const [text, setText] = useState(() => localStorage.getItem(STORAGE_KEY) || "");
+  const user = useCurrentUser();
+  const storageKey = userKey(user, "on_your_mind");
+
+  const [text, setText] = useState("");
   const timerRef = useRef(null);
+
+  // Load from storage once user is available
+  useEffect(() => {
+    setText(localStorage.getItem(storageKey) || "");
+  }, [storageKey]);
 
   const handleChange = (e) => {
     const val = e.target.value;
     setText(val);
     clearTimeout(timerRef.current);
-    timerRef.current = setTimeout(() => localStorage.setItem(STORAGE_KEY, val), 500);
+    timerRef.current = setTimeout(() => localStorage.setItem(storageKey, val), 500);
   };
 
   useEffect(() => () => clearTimeout(timerRef.current), []);

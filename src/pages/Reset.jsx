@@ -308,20 +308,26 @@ export default function Reset() {
 
   const shouldShowStarterMsg = starterWasCompleted && Math.random() > 0.4;
 
-  // Persist section states
+  // Load from user-scoped storage once key is ready
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(sectionStates));
-  }, [sectionStates, storageKey]);
-
-  // Check if it's a new day and reset states
-  useEffect(() => {
-    const lastResetDate = localStorage.getItem("resetLastDate");
+    try {
+      setSectionStates(JSON.parse(localStorage.getItem(storageKey) || "{}"));
+    } catch {
+      setSectionStates({});
+    }
+    const lastResetDate = localStorage.getItem(lastDateKey);
     if (lastResetDate !== todayStr) {
-      localStorage.setItem("resetLastDate", todayStr);
+      localStorage.setItem(lastDateKey, todayStr);
       localStorage.removeItem(storageKey);
       setSectionStates({});
     }
-  }, [todayStr, storageKey]);
+  }, [storageKey, lastDateKey, todayStr]);
+
+  // Persist section states
+  useEffect(() => {
+    if (!storageKey) return;
+    localStorage.setItem(storageKey, JSON.stringify(sectionStates));
+  }, [sectionStates, storageKey]);
 
   const sections = isSunday ? SUNDAY_SECTIONS : DAILY_SECTIONS;
   const contextLine = DAY_CONTEXT[dayOfWeek];

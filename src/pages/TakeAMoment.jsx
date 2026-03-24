@@ -26,6 +26,7 @@ export default function TakeAMoment() {
     queryKey: ["lastCheckIn"],
     queryFn: () => base44.entities.CheckInLog.list("-checked_at", 1),
     select: (data) => data?.[0] ?? null,
+    staleTime: 2 * 60 * 1000,
   });
 
   const mood = lastCheckIn?.mood?.toLowerCase() || "";

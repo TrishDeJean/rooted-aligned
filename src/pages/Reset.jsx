@@ -272,12 +272,14 @@ function ConfirmStartOver({ onConfirm, onCancel }) {
 }
 
 export default function Reset() {
+  const user = useCurrentUser();
   const today = new Date();
   const dayOfWeek = today.getDay();
   const isSunday = dayOfWeek === 0;
   const dayName = format(today, "EEEE");
   const todayStr = format(today, "yyyy-MM-dd");
-  const storageKey = `resetProgress_${todayStr}`;
+  const storageKey = userKey(user, `resetProgress_${todayStr}`);
+  const lastDateKey = userKey(user, "resetLastDate");
 
   const [completed, setCompleted] = useState(false);
   const [sectionStates, setSectionStates] = useState(() => {

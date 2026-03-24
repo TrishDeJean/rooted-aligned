@@ -107,6 +107,9 @@ export default function Dashboard() {
     queryClient.invalidateQueries({ queryKey: ["kids"] });
   };
 
+  const myProfile = kids.find(k => k.type === "adult");
+  const displayName = myProfile?.name?.split(" ")[0] || "you";
+
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="space-y-6">
@@ -114,7 +117,7 @@ export default function Dashboard() {
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <greeting.Icon className={`h-6 w-6 ${greeting.color}`} />
-          <h2 className="text-2xl font-bold tracking-tight">{greeting.text}, Trish 🤍</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{greeting.text}, {displayName} 🤍</h2>
         </div>
         <p className="text-muted-foreground">
           {format(new Date(), "EEEE, MMMM d")} · {total} gentle {total === 1 ? "plan" : "plans"} for today

@@ -4,6 +4,10 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AddScheduleDialog from "./schedule/AddScheduleDialog";
+import OnboardingModal from "./OnboardingModal";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const navItems = [
   { path: "/Dashboard", icon: LayoutDashboard, label: "Today" },

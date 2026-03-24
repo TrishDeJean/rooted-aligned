@@ -184,7 +184,7 @@ export default function KitchenPlan() {
     },
     onSuccess: (saved) => {
       setLocal(saved);
-      queryClient.invalidateQueries({ queryKey: ["mealPlan"] });
+      queryClient.invalidateQueries({ queryKey: ["mealPlan", weekStartStr, user?.email] });
     },
   });
 

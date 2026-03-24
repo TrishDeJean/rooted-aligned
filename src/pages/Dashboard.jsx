@@ -70,13 +70,13 @@ export default function Dashboard() {
     select: (data) => data?.[0] ?? null,
   });
 
-  const isLowEnergy = ["overwhelmed", "exhausted", "anxious", "low"].some(
-    m => lastCheckIn?.mood?.toLowerCase().includes(m)
-  );
+  const isLowEnergy = lastCheckIn?.mood
+    ? ["overwhelmed", "exhausted", "anxious", "low"].some(m => lastCheckIn.mood.toLowerCase().includes(m))
+    : false;
 
   const { data: starters = [] } = useQuery({
     queryKey: ["starters"],
-    queryFn: () => base44.entities.Starter.list(),
+    queryFn: () => base44.entities.Starter.list("-updated_date"),
   });
 
   const startersNeedingCare = starters.filter(s =>

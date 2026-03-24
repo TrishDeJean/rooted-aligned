@@ -197,7 +197,7 @@ export default function Profile() {
 
       <AddKidDialog
         open={showEdit}
-        onOpenChange={(v) => { setShowEdit(v); if (!v) queryClient.invalidateQueries({ queryKey: ["kids"] }); }}
+        onOpenChange={(v) => { setShowEdit(v); if (!v) queryClient.invalidateQueries({ queryKey: ["kids", user?.email] }); }}
         editKid={me}
         defaultType="adult"
       />

@@ -4,22 +4,25 @@ import { format, startOfWeek } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { Utensils } from "lucide-react";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const DAY_KEYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
 
 export default function MealsToday() {
+  const user = useCurrentUser();
   const todayDate = new Date();
   const weekStart = startOfWeek(todayDate, { weekStartsOn: 0 });
   const weekStartStr = format(weekStart, "yyyy-MM-dd");
   const dayKey = DAY_KEYS[todayDate.getDay()];
 
   const { data: plan } = useQuery({
-    queryKey: ["mealPlan", weekStartStr],
+    queryKey: ["mealPlan", weekStartStr, user?.email],
     queryFn: async () => {
-      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr });
+      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr, created_by: user.email });
       return results[0] ?? null;
     },
     staleTime: 5 * 60 * 1000,
+    enabled: !!user,
   });
 
   const breakfast = plan?.[`${dayKey}_breakfast`];

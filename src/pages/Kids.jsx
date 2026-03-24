@@ -30,7 +30,7 @@ export default function Kids() {
 
   const handleTogglePresence = async (kid) => {
     await base44.entities.Kid.update(kid.id, { is_present: kid.is_present === false ? true : false });
-    queryClient.invalidateQueries({ queryKey: ["kids"] });
+    queryClient.invalidateQueries({ queryKey: ["kids", user?.email] });
   };
 
   const KidSection = ({ title, list }) => list.length === 0 ? null : (

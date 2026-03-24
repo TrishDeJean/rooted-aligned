@@ -92,7 +92,7 @@ export default function Dashboard() {
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, completed }) => base44.entities.ScheduleEntry.update(id, { completed }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["scheduleEntries"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["scheduleEntries", today, user?.email] }),
   });
 
   const completed = entries.filter(e => e.completed).length;

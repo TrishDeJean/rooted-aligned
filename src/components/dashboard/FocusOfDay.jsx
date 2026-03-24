@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const FOCUS_LABELS = [
   "Keep it simple", "Bake day", "Care day", "Home reset",
@@ -13,16 +14,18 @@ const FOCUS_LABELS = [
 const today = format(new Date(), "yyyy-MM-dd");
 
 export default function FocusOfDay() {
+  const user = useCurrentUser();
   const queryClient = useQueryClient();
   const [editingTask, setEditingTask] = useState(null);
   const [taskDraft, setTaskDraft] = useState("");
 
   const { data: focus } = useQuery({
-    queryKey: ["dailyFocus", today],
+    queryKey: ["dailyFocus", today, user?.email],
     queryFn: async () => {
-      const results = await base44.entities.DailyFocus.filter({ date: today });
+      const results = await base44.entities.DailyFocus.filter({ date: today, created_by: user.email });
       return results?.[0] ?? null;
     },
+    enabled: !!user,
   });
 
   const saveMutation = useMutation({
@@ -30,7 +33,7 @@ export default function FocusOfDay() {
       focus?.id
         ? base44.entities.DailyFocus.update(focus.id, data)
         : base44.entities.DailyFocus.create({ date: today, ...data }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dailyFocus", today] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["dailyFocus", today, user?.email] }),
   });
 
   const setFocusLabel = (label) =>

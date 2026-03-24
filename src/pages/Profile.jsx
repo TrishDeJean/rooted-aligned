@@ -17,17 +17,20 @@ export default function Profile() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteStep, setDeleteStep] = useState(1);
   const queryClient = useQueryClient();
+  const user = useCurrentUser();
 
   const { data: people = [], isLoading } = useQuery({
-    queryKey: ["kids"],
-    queryFn: () => base44.entities.Kid.list(),
+    queryKey: ["kids", user?.email],
+    queryFn: () => base44.entities.Kid.filter({ created_by: user.email }),
+    enabled: !!user,
   });
 
   const { data: lastCheckIn } = useQuery({
-    queryKey: ["lastCheckIn"],
-    queryFn: () => base44.entities.CheckInLog.list("-checked_at", 1),
+    queryKey: ["lastCheckIn", user?.email],
+    queryFn: () => base44.entities.CheckInLog.filter({ created_by: user.email }, "-checked_at", 1),
     select: (data) => data?.[0] ?? null,
     staleTime: 2 * 60 * 1000,
+    enabled: !!user,
   });
 
   const me = people.find(p => p.type === "adult");

@@ -8,8 +8,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { StickyNote, Plus, Trash2, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function NotesSection() {
+  const user = useCurrentUser();
   const [text, setText] = useState("");
   const [isReminder, setIsReminder] = useState(false);
   const [dueDate, setDueDate] = useState("");
@@ -17,8 +19,9 @@ export default function NotesSection() {
   const queryClient = useQueryClient();
 
   const { data: notes = [] } = useQuery({
-    queryKey: ["notes"],
-    queryFn: () => base44.entities.Note.list("-created_date"),
+    queryKey: ["notes", user?.email],
+    queryFn: () => base44.entities.Note.filter({ created_by: user.email }, "-created_date"),
+    enabled: !!user,
   });
 
   const createMutation = useMutation({

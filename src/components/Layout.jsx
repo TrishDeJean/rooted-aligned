@@ -22,6 +22,17 @@ const navItems = [
 export default function Layout() {
   const location = useLocation();
   const [showAdd, setShowAdd] = useState(false);
+  const user = useCurrentUser();
+  const [onboardingDone, setOnboardingDone] = useState(false);
+
+  const { data: myProfile, isLoading: loadingProfile } = useQuery({
+    queryKey: ["kids", user?.email],
+    queryFn: () => base44.entities.Kid.filter({ created_by: user.email }),
+    select: (data) => data.find(k => k.type === "adult") ?? null,
+    enabled: !!user,
+  });
+
+  const needsOnboarding = !!user && !loadingProfile && !myProfile && !onboardingDone;
 
   return (
     <div

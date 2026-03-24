@@ -27,19 +27,19 @@ export default function NotesSection() {
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Note.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
+      queryClient.invalidateQueries({ queryKey: ["notes", user?.email] });
       setText(""); setIsReminder(false); setDueDate(""); setAdding(false);
     },
   });
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, completed }) => base44.entities.Note.update(id, { completed }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes", user?.email] }),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.Note.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notes", user?.email] }),
   });
 
   const handleAdd = () => {

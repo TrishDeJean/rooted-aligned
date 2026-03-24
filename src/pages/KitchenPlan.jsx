@@ -154,15 +154,16 @@ export default function KitchenPlan() {
   const weekStartStr = format(weekStart, "yyyy-MM-dd");
   const todayStr = format(new Date(), "yyyy-MM-dd");
   const queryClient = useQueryClient();
+  const user = useCurrentUser();
 
   const { data: plan, isLoading } = useQuery({
-    queryKey: ["mealPlan", weekStartStr],
+    queryKey: ["mealPlan", weekStartStr, user?.email],
     queryFn: async () => {
-      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr });
-      // Find the record belonging to the current user (created_by matches)
+      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr, created_by: user.email });
       return results[0] ?? null;
     },
-    staleTime: 5 * 60 * 1000, // 5 min — prevents unnecessary refetches
+    staleTime: 5 * 60 * 1000,
+    enabled: !!user,
   });
 
   const [local, setLocal] = useState({});

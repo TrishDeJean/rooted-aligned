@@ -84,7 +84,7 @@ export default function Schedule() {
 
   const { data: recurringEntries = [], isLoading } = useQuery({
     queryKey: ["recurringEntries"],
-    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true }),
+    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true }, "start_time"),
   });
 
   const dayOfWeek = selectedDate.getDay(); // 0=Sun..6=Sat

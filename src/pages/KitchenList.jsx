@@ -61,7 +61,7 @@ export default function KitchenList() {
   const { data: plan } = useQuery({
     queryKey: ["mealPlan", weekStartStr, user?.email],
     queryFn: async () => {
-      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr });
+      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr, created_by: user.email });
       return results[0] ?? null;
     },
     enabled: !!user,

@@ -282,13 +282,7 @@ export default function Reset() {
   const lastDateKey = userKey(user, "resetLastDate");
 
   const [completed, setCompleted] = useState(false);
-  const [sectionStates, setSectionStates] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(storageKey) || "{}");
-    } catch {
-      return {};
-    }
-  });
+  const [sectionStates, setSectionStates] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
   const [reflection, setReflection] = useState("");
   const [showReflection, setShowReflection] = useState(false);

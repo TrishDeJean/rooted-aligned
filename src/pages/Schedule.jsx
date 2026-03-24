@@ -111,13 +111,14 @@ export default function Schedule() {
     });
 
   const { data: kids = [] } = useQuery({
-    queryKey: ["kids"],
-    queryFn: () => base44.entities.Kid.list(),
+    queryKey: ["kids", user?.email],
+    queryFn: () => base44.entities.Kid.filter({ created_by: user.email }),
+    enabled: !!user,
   });
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, completed }) => base44.entities.ScheduleEntry.update(id, { completed }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["scheduleEntries"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["scheduleEntries", dateStr, user?.email] }),
   });
 
   const isToday = format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");

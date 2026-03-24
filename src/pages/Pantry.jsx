@@ -28,37 +28,40 @@ function getWeekStart() {
 
 export default function Pantry() {
   const queryClient = useQueryClient();
+  const user = useCurrentUser();
   const weekStartStr = getWeekStart();
   const [newItemSection, setNewItemSection] = useState(null);
   const [newItemName, setNewItemName] = useState("");
 
   const { data: items = [], isLoading } = useQuery({
-    queryKey: ["pantryItems"],
-    queryFn: () => base44.entities.PantryItem.list(),
+    queryKey: ["pantryItems", user?.email],
+    queryFn: () => base44.entities.PantryItem.filter({ created_by: user.email }),
+    enabled: !!user,
   });
 
   const { data: plan } = useQuery({
-    queryKey: ["mealPlan", weekStartStr],
+    queryKey: ["mealPlan", weekStartStr, user?.email],
     queryFn: async () => {
-      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr });
+      const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr, created_by: user.email });
       return results[0] ?? null;
     },
     staleTime: 5 * 60 * 1000,
+    enabled: !!user,
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.PantryItem.update(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pantryItems"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pantryItems", user?.email] }),
   });
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.PantryItem.create(data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pantryItems"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pantryItems", user?.email] }),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.PantryItem.delete(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pantryItems"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pantryItems", user?.email] }),
   });
 
   const planMutation = useMutation({
@@ -66,7 +69,7 @@ export default function Pantry() {
       plan?.id
         ? base44.entities.MealPlan.update(plan.id, data)
         : base44.entities.MealPlan.create({ week_start: weekStartStr, ...data }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["mealPlan", weekStartStr] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["mealPlan", weekStartStr, user?.email] }),
   });
 
   const cycleStatus = (item) => {

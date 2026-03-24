@@ -108,6 +108,7 @@ export default function Layout() {
       </nav>
 
       <AddScheduleDialog open={showAdd} onOpenChange={setShowAdd} />
+      <OnboardingModal open={needsOnboarding} onComplete={() => setOnboardingDone(true)} />
     </div>
   );
 }

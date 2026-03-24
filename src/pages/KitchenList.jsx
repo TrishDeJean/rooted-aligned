@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser, userKey } from "@/hooks/useCurrentUser";
 import { format, startOfWeek } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { ChevronLeft, ShoppingBag, Check, Share2, Copy, CheckCheck, Trash2 } from "lucide-react";

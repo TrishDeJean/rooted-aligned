@@ -53,24 +53,29 @@ function parseItems(plan) {
 }
 
 export default function KitchenList() {
+  const user = useCurrentUser();
   const weekStartStr = getWeekStart();
-  const storageKey = `kitchenList_v2_${weekStartStr}`;
+  const storageKey = userKey(user, `kitchenList_v2_${weekStartStr}`);
   const queryClient = useQueryClient();
 
   const { data: plan } = useQuery({
-    queryKey: ["mealPlan", weekStartStr],
+    queryKey: ["mealPlan", weekStartStr, user?.email],
     queryFn: async () => {
       const results = await base44.entities.MealPlan.filter({ week_start: weekStartStr });
       return results[0] ?? null;
     },
+    enabled: !!user,
   });
 
-  const [itemStates, setItemStates] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(storageKey) || "{}"); }
-    catch { return {}; }
-  });
+  const [itemStates, setItemStates] = useState({});
 
   useEffect(() => {
+    try { setItemStates(JSON.parse(localStorage.getItem(storageKey) || "{}")); }
+    catch { setItemStates({}); }
+  }, [storageKey]);
+
+  useEffect(() => {
+    if (!storageKey) return;
     localStorage.setItem(storageKey, JSON.stringify(itemStates));
   }, [itemStates, storageKey]);
 

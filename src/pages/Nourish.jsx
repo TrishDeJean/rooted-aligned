@@ -33,20 +33,23 @@ export default function Nourish() {
   const [editStarter, setEditStarter] = useState(null);
   const [activeTab, setActiveTab] = useState("starters");
   const queryClient = useQueryClient();
+  const user = useCurrentUser();
 
   const { data: starters = [] } = useQuery({
-    queryKey: ["starters"],
-    queryFn: () => base44.entities.Starter.list("-updated_date"),
+    queryKey: ["starters", user?.email],
+    queryFn: () => base44.entities.Starter.filter({ created_by: user.email }, "-updated_date"),
+    enabled: !!user,
   });
 
   const { data: logs = [] } = useQuery({
-    queryKey: ["nourishLogs"],
-    queryFn: () => base44.entities.NourishLog.list("-created_date", 20),
+    queryKey: ["nourishLogs", user?.email],
+    queryFn: () => base44.entities.NourishLog.filter({ created_by: user.email }, "-created_date", 20),
+    enabled: !!user,
   });
 
   const logMutation = useMutation({
     mutationFn: (data) => base44.entities.NourishLog.create(data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["nourishLogs"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["nourishLogs", user?.email] }),
   });
 
   const feedAllMutation = useMutation({
@@ -59,8 +62,8 @@ export default function Nourish() {
       await base44.entities.NourishLog.create({ log_type: "fed_all", notes: "All starters fed" });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["starters"] });
-      queryClient.invalidateQueries({ queryKey: ["nourishLogs"] });
+      queryClient.invalidateQueries({ queryKey: ["starters", user?.email] });
+      queryClient.invalidateQueries({ queryKey: ["nourishLogs", user?.email] });
     },
   });
 

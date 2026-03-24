@@ -33,10 +33,12 @@ export default function AddScheduleDialog({ open, onOpenChange, editEntry }) {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
+  const user = useCurrentUser();
 
   const { data: kids = [] } = useQuery({
-    queryKey: ["kids"],
-    queryFn: () => base44.entities.Kid.list(),
+    queryKey: ["kids", user?.email],
+    queryFn: () => base44.entities.Kid.filter({ created_by: user.email }),
+    enabled: !!user,
   });
 
   useEffect(() => {

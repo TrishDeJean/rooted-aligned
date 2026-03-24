@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { format, startOfWeek, addDays } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";

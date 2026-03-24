@@ -76,16 +76,19 @@ export default function Schedule() {
   const [editEntry, setEditEntry] = useState(null);
   const [showEdit, setShowEdit] = useState(false);
   const queryClient = useQueryClient();
+  const user = useCurrentUser();
   const dateStr = format(selectedDate, "yyyy-MM-dd");
 
   const { data: entriesForDate = [] } = useQuery({
-    queryKey: ["scheduleEntries", dateStr],
-    queryFn: () => base44.entities.ScheduleEntry.filter({ date: dateStr }, "start_time"),
+    queryKey: ["scheduleEntries", dateStr, user?.email],
+    queryFn: () => base44.entities.ScheduleEntry.filter({ date: dateStr, created_by: user.email }, "start_time"),
+    enabled: !!user,
   });
 
   const { data: recurringEntries = [], isLoading } = useQuery({
-    queryKey: ["recurringEntries"],
-    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true }, "start_time"),
+    queryKey: ["recurringEntries", user?.email],
+    queryFn: () => base44.entities.ScheduleEntry.filter({ is_recurring: true, created_by: user.email }, "start_time"),
+    enabled: !!user,
   });
 
   const dayOfWeek = selectedDate.getDay(); // 0=Sun..6=Sat

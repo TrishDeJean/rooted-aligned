@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { User, Cake, Pencil, Trash2, AlertTriangle, LogOut, Wind, Heart, Sparkles, Settings } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

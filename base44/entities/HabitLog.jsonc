@@ -1,0 +1,19 @@
+{
+  "name": "HabitLog",
+  "type": "object",
+  "properties": {
+    "habit_id": {
+      "type": "string",
+      "description": "ID of the habit"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date this habit was completed (YYYY-MM-DD)"
+    }
+  },
+  "required": [
+    "habit_id",
+    "date"
+  ]
+}

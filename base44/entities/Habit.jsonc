@@ -1,0 +1,26 @@
+{
+  "name": "Habit",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Habit name"
+    },
+    "emoji": {
+      "type": "string",
+      "description": "Optional emoji icon"
+    },
+    "color": {
+      "type": "string",
+      "description": "Color identifier for the habit"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this habit is currently tracked"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

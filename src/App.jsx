@@ -18,6 +18,7 @@ import KitchenPlan from './pages/KitchenPlan';
 import KitchenList from './pages/KitchenList';
 import Pantry from './pages/Pantry';
 import Reset from './pages/Reset';
+import Habits from './pages/Habits';
 import { Navigate } from 'react-router-dom';
 
 const AuthenticatedApp = () => {
@@ -60,6 +61,7 @@ const AuthenticatedApp = () => {
         <Route path="/KitchenPlan" element={<KitchenPlan />} />
         <Route path="/KitchenList" element={<KitchenList />} />
         <Route path="/Pantry" element={<Pantry />} />
+        <Route path="/Habits" element={<Habits />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

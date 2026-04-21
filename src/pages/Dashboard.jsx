@@ -14,6 +14,7 @@ import NotesSection from "@/components/notes/NotesSection";
 import FocusOfDay from "@/components/dashboard/FocusOfDay";
 import OnYourMind from "@/components/dashboard/OnYourMind";
 import MealsToday from "@/components/dashboard/MealsToday";
+import HabitStreakCard from "@/components/habits/HabitStreakCard";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 function getGreeting() {
@@ -192,6 +193,9 @@ export default function Dashboard() {
 
       {/* On Your Mind */}
       <OnYourMind />
+
+      {/* Daily Rituals streak */}
+      <HabitStreakCard />
 
       {/* Meals Today */}
       <MealsToday />
